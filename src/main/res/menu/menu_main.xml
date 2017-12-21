@@ -4,7 +4,7 @@
 
     tools:context="com.example.tony.consoleapplication.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/add_settings"
         android:layout_width="wrap_content"
         android:enabled="true"
         android:orderInCategory="100"

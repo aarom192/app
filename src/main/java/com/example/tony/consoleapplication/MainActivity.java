@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,8 +54,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.add_settings) {
+            AddFragment addFragment= new AddFragment();
 
+            // Add Fragment to FrameLayout (flContainer), using FragmentManager
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
+            ft.add(R.id.container, addFragment);                                // add    Fragment
+            ft.commit();
             return true;
         }
 
