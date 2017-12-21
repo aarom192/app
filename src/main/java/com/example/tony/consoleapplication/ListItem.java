@@ -2,6 +2,7 @@ package com.example.tony.consoleapplication;
 
 /**
  * Created by Tony on 2017/12/19.
+ * コミットのテスト
  */
 
 public class ListItem {
