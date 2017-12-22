@@ -1,5 +1,6 @@
 package com.example.tony.consoleapplication;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import android.app.FragmentManager;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener{
     ListView listView;
 
     @Override
@@ -57,10 +58,15 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.add_settings) {
             AddFragment addFragment= new AddFragment();
 
-            // Add Fragment to FrameLayout (flContainer), using FragmentManager
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
             ft.add(R.id.container, addFragment);                                // add    Fragment
             ft.commit();
+
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.container, addFragment) // replace flContainer
+//                    .addToBackStack(null)
+//                    .commit();
             return true;
         }
 
@@ -145,4 +151,9 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         }
     };
+
+    @Override
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty
+    }
 }
