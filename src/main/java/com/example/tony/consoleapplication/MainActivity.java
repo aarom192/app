@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             AddFragment addFragment= new AddFragment();
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
-            ft.add(R.id.container, addFragment);                                // add    Fragment
+            ft.add(R.id.container, addFragment);    // add    Fragment
+            ft.addToBackStack(null);
             ft.commit();
 
             return true;

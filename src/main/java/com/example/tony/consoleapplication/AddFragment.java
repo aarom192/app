@@ -65,7 +65,10 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +85,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -133,6 +137,14 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         // TODO 自動生成されたメソッド・スタブ
         Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Could handle back press.
+     * @return true if back press was handled
+     */
+    public boolean onBackPressed() {
+        return false;
     }
 
 }
