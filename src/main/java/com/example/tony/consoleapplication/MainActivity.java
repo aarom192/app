@@ -62,11 +62,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             ft.add(R.id.container, addFragment);                                // add    Fragment
             ft.commit();
 
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.container, addFragment) // replace flContainer
-//                    .addToBackStack(null)
-//                    .commit();
             return true;
         }
 

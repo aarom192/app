@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.plus.PlusOneButton;
 
@@ -18,7 +20,7 @@ import com.google.android.gms.plus.PlusOneButton;
  * Use the {@link AddFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +32,7 @@ public class AddFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private PlusOneButton mPlusOneButton;
+   // private Button mAdd_Buttom;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,8 +73,12 @@ public class AddFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        //Find the +1 button
-        //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
+        Button btn = new Button(getContext());
+        btn.setText("Add data");
+        btn = (Button)view.findViewById(R.id.add);
+        btn.setOnClickListener(this);
+
+
 
         return view;
     }
@@ -122,6 +128,11 @@ public class AddFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    @Override
+    public void onClick(View v) {
+        // TODO 自動生成されたメソッド・スタブ
+        Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
     }
 
 }
