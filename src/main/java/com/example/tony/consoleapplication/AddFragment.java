@@ -1,14 +1,15 @@
 package com.example.tony.consoleapplication;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.plus.PlusOneButton;
 
@@ -25,20 +26,17 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    // The request code must be 0 or greater.
-    private static final int PLUS_ONE_REQUEST_CODE = 0;
-    // The URL to +1.  Must be a valid URL.
-    private final String PLUS_ONE_URL = "http://developer.android.com";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
    // private Button mAdd_Buttom;
+   private EditText editText_name;
+    private EditText editText_calorie;
+
+    // 変数を用意する
 
     private OnFragmentInteractionListener mListener;
-
-    public AddFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -80,7 +78,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         btn.setText("Add data");
         btn = (Button)view.findViewById(R.id.add);
         btn.setOnClickListener(this);
-
+        editText_name = view.findViewById(R.id.add_name_text);
+        editText_calorie = view.findViewById(R.id.add_calorie_text);
 
 
         return view;
@@ -96,9 +95,9 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String s) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+           // mListener.onFragmentInteraction(s);
         }
     }
 
@@ -131,20 +130,32 @@ public class AddFragment extends Fragment implements View.OnClickListener {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(String name , String calorie);
     }
     @Override
     public void onClick(View v) {
         // TODO 自動生成されたメソッド・スタブ
-        Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
+        // エディットテキストのテキストを取得
+        String name = editText_name.getText().toString();
+        String calorie = editText_calorie.getText().toString();
+        mListener.onFragmentInteraction(name, calorie);
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack ("fragB", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
     }
+
+
 
     /**
      * Could handle back press.
      * @return true if back press was handled
      */
     public boolean onBackPressed() {
-        return false;
+//       String s = "tw.yahoo.com";
+//        mListener.onFragmentInteraction(s);
+//        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        return true;
     }
-
 }

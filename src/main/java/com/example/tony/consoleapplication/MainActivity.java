@@ -23,10 +23,33 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import android.app.FragmentManager;
+import android.widget.Toast;
+
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener{
     ListView listView;
+    String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
+    String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         setSupportActionBar(toolbar);
 
         listView = (ListView) findViewById(R.id.listView);
-        getJSON("http://192.168.100.95/Android/getdata.php");
+        getJSON(ServerURL_getdata);
     }
 
 
@@ -60,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
             ft.add(R.id.container, addFragment);    // add    Fragment
-            ft.addToBackStack(null);
+            ft.addToBackStack("fragB");
             ft.commit();
 
             return true;
@@ -149,7 +172,58 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     };
 
     @Override
-    public void onFragmentInteraction(Uri uri){
+    public void onFragmentInteraction(String name , String calorie){
         //you can leave it empty
+        InsertData(name, calorie);
+        Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
+    }
+
+    public void InsertData(final String name, final String calorie){
+
+        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+
+                String NameHolder = name ;
+                String EmailHolder = calorie ;
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+                nameValuePairs.add(new BasicNameValuePair("name", NameHolder));
+                nameValuePairs.add(new BasicNameValuePair("calorie", EmailHolder));
+
+                try {
+                    HttpClient httpClient = new DefaultHttpClient();
+
+                    HttpPost httpPost = new HttpPost(ServerURL_insertdata);
+
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    HttpResponse httpResponse = httpClient.execute(httpPost);
+
+                    HttpEntity httpEntity = httpResponse.getEntity();
+
+
+                } catch (ClientProtocolException e) {
+
+                } catch (IOException e) {
+
+                }
+                return "Data Inserted Successfully";
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                super.onPostExecute(result);
+
+                Toast.makeText(MainActivity.this, "Data Submit Successfully", Toast.LENGTH_LONG).show();
+
+            }
+        }
+
+        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+
+        sendPostReqAsyncTask.execute(name, calorie);
     }
 }
