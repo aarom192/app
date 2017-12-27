@@ -1,3 +1,4 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?php
 
 $servername = "localhost";
@@ -5,24 +6,30 @@ $username = "root";
 $password = "1258";
 $dbname = "db_test";
  
- $con = new mysqli($servername, $username, $password, $dbname);
+ $con = mysqli_connect($servername, $username, $password, $dbname);
  
- mysqli_query($con,"SET NAMES 'utf8'");
+ //$db_selected = mysql_select_db($dbname, $con);
+ 
+ mysqli_query($con, 'SET NAMES utf8');
+ 
+ //mysql_set_charset('utf8');
+ 
+ 
+// mysqli_query($con,"SET NAMES 'utf8'");
  //$sql = "SELECT *FROM test_chinese;";
  //mysqli_query($con,"SET NAMES 'utf8'");
+ $name = 'ç·‘èŒ¶';
+ $cid =10;
  
- //$name = $_POST['name'];
- //$calorie = $_POST['calorie'];
+ $name = $_POST['name'];
+ $cid = $_POST['calorie'];
  
- 
- $Sql_Query = "INSERT INTO conference(cid, name) VALUES (7,'g’ƒ')";
- 
- //creating an statment with the query
-$stmt = $con->prepare($Sql_Query);
-
+ $Sql_Query = "INSERT INTO test_chinese(id, name) VALUES ('$cid', '$name')";
+ //$Sql_Query = "INSERT INTO conference(cid, name) VALUES ('$cid', '$name')";
+ //$Sql_Query = "INSERT INTO conference(cid, name) VALUES (9, 'ç·‘èŒ¶')";
 //executing that statment
 
-  if($stmt->execute()){
+  if(mysqli_query($con, $Sql_Query)){
  
  echo 'Data Submit Successfully';
  
