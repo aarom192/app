@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
                     HttpPost httpPost = new HttpPost(ServerURL_insertdata);
 
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
                     HttpResponse httpResponse = httpClient.execute(httpPost);
 
