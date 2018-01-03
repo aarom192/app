@@ -12,21 +12,10 @@ $dbname = "db_test";
  
  mysqli_query($con, 'SET NAMES utf8');
  
- //mysql_set_charset('utf8');
- 
- 
-// mysqli_query($con,"SET NAMES 'utf8'");
- //$sql = "SELECT *FROM test_chinese;";
- //mysqli_query($con,"SET NAMES 'utf8'");
- $name = '緑茶';
- $cid =10;
- 
  $name = $_POST['name'];
- $cid = $_POST['calorie'];
+ $calorie = $_POST['calorie'];
  
- $Sql_Query = "INSERT INTO test_chinese(id, name) VALUES ('$cid', '$name')";
- //$Sql_Query = "INSERT INTO conference(cid, name) VALUES ('$cid', '$name')";
- //$Sql_Query = "INSERT INTO conference(cid, name) VALUES (9, '緑茶')";
+ $Sql_Query = "INSERT INTO test_chinese(name, calorie) VALUES ('$name','$calorie')";
 //executing that statment
 
   if(mysqli_query($con, $Sql_Query)){
