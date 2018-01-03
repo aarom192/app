@@ -33,6 +33,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
    // private Button mAdd_Buttom;
    private EditText editText_name;
     private EditText editText_calorie;
+    private EditText editText_store;
 
     // 変数を用意する
 
@@ -80,6 +81,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         btn.setOnClickListener(this);
         editText_name = view.findViewById(R.id.add_name_text);
         editText_calorie = view.findViewById(R.id.add_calorie_text);
+        editText_store = view.findViewById(R.id.add_store_text);
 
 
         return view;
@@ -130,7 +132,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(String name , String calorie);
+        void onFragmentInteraction(String name , String calorie, String store);
     }
     @Override
     public void onClick(View v) {
@@ -139,7 +141,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         // エディットテキストのテキストを取得
         String name = editText_name.getText().toString();
         String calorie = editText_calorie.getText().toString();
-        mListener.onFragmentInteraction(name, calorie);
+        String store = editText_store.getText().toString();
+        mListener.onFragmentInteraction(name, calorie, store);
         FragmentManager fm = getActivity()
                 .getSupportFragmentManager();
         fm.popBackStack ("fragB", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -153,9 +156,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
      * @return true if back press was handled
      */
     public boolean onBackPressed() {
-//       String s = "tw.yahoo.com";
-//        mListener.onFragmentInteraction(s);
-//        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
         return true;
     }
 }

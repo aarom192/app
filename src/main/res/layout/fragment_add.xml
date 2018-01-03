@@ -24,6 +24,12 @@
         android:layout_height="70dp"
         android:layout_below="@+id/add_name_text"
         android:hint="カロリーを入力して下さい"/>
+        <EditText
+            android:id="@+id/add_store_text"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/add_calorie_text"
+            android:hint="ストア名を入力して下さい"/>
 
     <Button
         android:id="@+id/add"

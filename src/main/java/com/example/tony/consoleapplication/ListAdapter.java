@@ -2,8 +2,6 @@ package com.example.tony.consoleapplication;
 
 /**
  * Created by Tony on 2017/12/19.
- * テストのコミット
- * テストのコミット2
  */
 
 import android.content.Context;

@@ -1,10 +1,7 @@
 package com.example.tony.consoleapplication;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,16 +19,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import android.app.FragmentManager;
 import android.widget.Toast;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -42,7 +31,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -172,32 +160,34 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     };
 
     @Override
-    public void onFragmentInteraction(String name , String calorie){
+    public void onFragmentInteraction(String name , String calorie, String store){
         //you can leave it empty
-        InsertData(name, calorie);
+        InsertData(name, calorie, store);
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
     }
 
-    public void InsertData(final String name, final String calorie){
+    public void InsertData(final String name, final String calorie, final String store){
 
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
 
-                String NameHolder = name ;
-                String EmailHolder = calorie ;
+                String NameHolder = name;
+                String CalorieHolder = calorie ;
+                String StoreHolder = store;
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
                 nameValuePairs.add(new BasicNameValuePair("name", NameHolder));
-                nameValuePairs.add(new BasicNameValuePair("calorie", EmailHolder));
+                nameValuePairs.add(new BasicNameValuePair("calorie", CalorieHolder));
+                nameValuePairs.add(new BasicNameValuePair("store", StoreHolder));
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
 
                     HttpPost httpPost = new HttpPost(ServerURL_insertdata);
 
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf8"));
 
                     HttpResponse httpResponse = httpClient.execute(httpPost);
 
@@ -224,6 +214,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
-        sendPostReqAsyncTask.execute(name, calorie);
+        sendPostReqAsyncTask.execute(name, calorie, store);
     }
 }
