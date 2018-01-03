@@ -46,6 +46,10 @@ public class ListAdapter extends ArrayAdapter<ListItem> {
         ListItem item = mItems.get(position);
 
         // サムネイル画像を設定
+        TextView id = (TextView)view.findViewById(R.id.id);
+        id.setText(item.getId());
+
+        // サムネイル画像を設定
         TextView name = (TextView)view.findViewById(R.id.name);
         name.setText(item.getmName());
 

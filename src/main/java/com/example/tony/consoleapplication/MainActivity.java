@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
-                ListItem item = new ListItem(obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
                 listItems.add(item);
             } catch (JSONException e) {
                 e.printStackTrace();

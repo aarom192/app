@@ -5,6 +5,7 @@ package com.example.tony.consoleapplication;
  */
 
 public class ListItem {
+    private String mID = null;
     private String mName = null;
     private String mCalories = null;
     private String mStore = null;
@@ -19,7 +20,8 @@ public class ListItem {
      * @param name 品物の名
      * @param calories カロリー
      */
-    public ListItem(String name, String calories, String store) {
+    public ListItem(String id, String name, String calories, String store) {
+        mID = id;
         mName = name;
         mCalories = calories;
         mStore = store;
@@ -47,6 +49,14 @@ public class ListItem {
      */
     public void setmStore(String store) {
         mStore = store;
+    }
+
+    /**
+     * IDを取得
+     * @return ID
+     */
+    public String getId() {
+        return mID;
     }
 
     /**
