@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         dbAdapter = new DBAdapter(this);
 
         listView = (ListView) findViewById(R.id.listView);
-        getsqlitedata();
+        getSqliteData();
         //getJSON(ServerURL_getdata);
     }
 
@@ -238,21 +238,17 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         sendPostReqAsyncTask.execute(name, calorie, store);
     }
 
-    public void getsqlitedata(){
-
-        String column = "name";          //検索対象のカラム名
-        String[] name = {"HotTea"};            //検索対象の文字
+    public void getSqliteData(){
 
         // DBの検索データを取得 入力した文字列を参照してDBの品名から検索
         dbAdapter.readDB();
-        Cursor c = dbAdapter.searchDB(null, column, name);
+        Cursor c = dbAdapter.getDB(null);
         ArrayList<ListItem> listItems = new ArrayList<>();
 
         if (c.moveToFirst()) {
             do {
-                ListItem item = new ListItem(c.getString(1), c.getString(2), c.getString(3), c.getString(4));
+                ListItem item = new ListItem(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
                 listItems.add(item);
-
             } while (c.moveToNext());
         } else {
             Toast.makeText(this, "検索結果 0件", Toast.LENGTH_SHORT).show();

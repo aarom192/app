@@ -82,8 +82,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         editText_name = view.findViewById(R.id.add_name_text);
         editText_calorie = view.findViewById(R.id.add_calorie_text);
         editText_store = view.findViewById(R.id.add_store_text);
-
-
         return view;
     }
 
@@ -139,12 +137,12 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         // TODO 自動生成されたメソッド・スタブ
         //Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
         // エディットテキストのテキストを取得
-//        String name = editText_name.getText().toString();
-//        String calorie = editText_calorie.getText().toString();
-//        String store = editText_store.getText().toString();
-        String name = "HotTea";
-        String calorie = "100";
-        String store = "7-11";
+        String name = editText_name.getText().toString();
+        String calorie = editText_calorie.getText().toString();
+        String store = editText_store.getText().toString();
+//        String name = "GreenTea";
+//        String calorie = "100";
+//        String store = "7-11";
         mListener.onFragmentInteraction(name, calorie, store);
         FragmentManager fm = getActivity()
                 .getSupportFragmentManager();

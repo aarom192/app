@@ -202,7 +202,7 @@ public class DBAdapter {
             String createTbl = "CREATE TABLE " + DB_TABLE + " ("
                     + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COL_NAME + " TEXT NOT NULL,"
-                    + COL_CALORIE_MARK + " TEXT NOT NULL,"
+                    + COL_CALORIE + " TEXT NOT NULL,"
                     + COL_STORE + " TEXT NOT NULL"
                     + ");";
 
@@ -219,7 +219,7 @@ public class DBAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // DBからテーブル削除
-            //db.execSQL("DROP TABLE IF EXISTS" + DB_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS" + DB_TABLE);
             // テーブル生成
             onCreate(db);
         }
