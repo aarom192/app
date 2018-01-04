@@ -1,6 +1,7 @@
 package com.example.tony.consoleapplication;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -35,11 +36,16 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.List;
 
+import android.database.Cursor;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener{
     ListView listView;
     String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
+    DBAdapter dbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +53,11 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        dbAdapter = new DBAdapter(this);
 
         listView = (ListView) findViewById(R.id.listView);
-        getJSON(ServerURL_getdata);
+        getsqlitedata();
+        //getJSON(ServerURL_getdata);
     }
 
 
@@ -156,6 +164,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Tap No. " + String.valueOf(position + 1));
             builder.setMessage(item.getmName());
+            builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(MainActivity.this, "我還尚未了解",Toast.LENGTH_SHORT).show();
+                }
+            });
             //builder.setMessage(item.getmCalories());
             builder.show();
         }
@@ -221,5 +236,30 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
         sendPostReqAsyncTask.execute(name, calorie, store);
+    }
+
+    public void getsqlitedata(){
+
+        String column = "name";          //検索対象のカラム名
+        String[] name = {"HotTea"};            //検索対象の文字
+
+        // DBの検索データを取得 入力した文字列を参照してDBの品名から検索
+        dbAdapter.readDB();
+        Cursor c = dbAdapter.searchDB(null, column, name);
+        ArrayList<ListItem> listItems = new ArrayList<>();
+
+        if (c.moveToFirst()) {
+            do {
+                ListItem item = new ListItem(c.getString(1), c.getString(2), c.getString(3), c.getString(4));
+                listItems.add(item);
+
+            } while (c.moveToNext());
+        } else {
+            Toast.makeText(this, "検索結果 0件", Toast.LENGTH_SHORT).show();
+        }
+        c.close();
+        dbAdapter.closeDB();        // DBを閉じる
+        ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
+        listView.setAdapter(adapter);
     }
 }
