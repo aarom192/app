@@ -35,10 +35,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.List;
-
 import android.database.Cursor;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener{
@@ -46,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
     DBAdapter dbAdapter;
+    private List<ListItem> listItems;
+    protected ListItem myListItem;
+    ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +54,21 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         dbAdapter = new DBAdapter(this);
+        listItems = new ArrayList<>();
 
         listView = (ListView) findViewById(R.id.listView);
         getSqliteData();
         //getJSON(ServerURL_getdata);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        loadMyList();
+    }
+
+
+
 
 
     @Override
@@ -156,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
      */
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view,final int position, long id) {
             // タップしたアイテムの取得
             ListView listView = (ListView)parent;
             ListItem item = (ListItem)listView.getItemAtPosition(position);  // SampleListItemにキャスト
@@ -168,7 +178,14 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     // TODO Auto-generated method stub
-                    Toast.makeText(MainActivity.this, "我還尚未了解",Toast.LENGTH_SHORT).show();
+                    // IDを取得する
+                    myListItem = listItems.get(position);
+                    String listId = myListItem.getId();
+                    dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+                    dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
+                    dbAdapter.closeDB();    // DBを閉じる
+                    loadMyList();
+                    Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
                 }
             });
             //builder.setMessage(item.getmCalories());
@@ -184,7 +201,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         InsertData(name, calorie, store);
+        loadMyList();
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
+        loadMyList();
     }
 
     public void InsertData(final String name, final String calorie, final String store){
@@ -243,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         // DBの検索データを取得 入力した文字列を参照してDBの品名から検索
         dbAdapter.readDB();
         Cursor c = dbAdapter.getDB(null);
-        ArrayList<ListItem> listItems = new ArrayList<>();
 
         if (c.moveToFirst()) {
             do {
@@ -255,7 +273,38 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         }
         c.close();
         dbAdapter.closeDB();        // DBを閉じる
+        adapter = new ListAdapter (this, R.layout.list_item, listItems);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
+    }
+
+    /**
+     * DBを読み込む＆更新する処理
+     * loadMyList()
+     */
+    public void loadMyList() {
+
+        //ArrayAdapterに対してListViewのリスト(items)の更新
+        listItems.clear();
+        adapter.clear();
+        dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+
+        // DBのデータを取得
+        Cursor c = dbAdapter.getDB(null);
+
+        if (c.moveToFirst()) {
+            do {
+                // MyListItemのコンストラクタ呼び出し(myListItemのオブジェクト生成)
+                myListItem = new ListItem(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
+                listItems.add(myListItem);          // 取得した要素をitemsに追加
+
+            } while (c.moveToNext());
+        }
+        c.close();
+        dbAdapter.closeDB();                    // DBを閉じる
         ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
+        Toast.makeText(MainActivity.this, "List Renew",Toast.LENGTH_SHORT).show();
     }
 }
