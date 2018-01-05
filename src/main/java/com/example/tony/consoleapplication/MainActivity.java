@@ -67,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         loadMyList();
     }
 
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -201,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         InsertData(name, calorie, store);
-        loadMyList();
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
         loadMyList();
     }

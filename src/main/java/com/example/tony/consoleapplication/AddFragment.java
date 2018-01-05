@@ -140,20 +140,18 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         String name = editText_name.getText().toString();
         String calorie = editText_calorie.getText().toString();
         String store = editText_store.getText().toString();
-//       String name = "GreenTea";
+//      String name = "GreenTea";
 //       String calorie = "100";
-//       String store = "7-11";
-        mListener.onFragmentInteraction(name, calorie, store);
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack ("fragB", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
+//      String store = "7-11";
         // DBへの登録処理
         DBAdapter dbAdapter = new DBAdapter(getContext());
         dbAdapter.openDB();
         dbAdapter.saveDB(name, calorie, store);
         dbAdapter.closeDB();
-
+        mListener.onFragmentInteraction(name, calorie, store);
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack ("fragB", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
     /**
      * Could handle back press.
