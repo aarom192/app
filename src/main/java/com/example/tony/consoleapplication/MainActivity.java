@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             // IDを取得する
             myListItem = listItems.get(position);
             final String listId = myListItem.getId();
+            final String listName = myListItem.getmName();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Tap No. " + listId);
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
                     dbAdapter.closeDB();    // DBを閉じる
                     loadMyList();
-                    deleteData(listId);
+                    deleteData(listName);
                     Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -274,21 +275,21 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         sendPostReqAsyncTask.execute(name, calorie, store);
     }
-    public void deleteData(final String id){
+    public void deleteData(final String name){
 
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
 
-                String IDHolder = id;
+                String NameHolder = name;
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-                nameValuePairs.add(new BasicNameValuePair("id", IDHolder));
+                nameValuePairs.add(new BasicNameValuePair("name", NameHolder));
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpPost httpPost = new HttpPost(ServerURL_deletedata);
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf8"));
                     HttpResponse httpResponse = httpClient.execute(httpPost);
                     HttpEntity httpEntity = httpResponse.getEntity();
 
@@ -314,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
-        sendPostReqAsyncTask.execute(id);
+        sendPostReqAsyncTask.execute(name);
     }
 
     public void getSqliteData(){
