@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     ListView listView;
     String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
+    String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
     protected ListItem myListItem;
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
                     dbAdapter.closeDB();    // DBを閉じる
                     loadMyList();
+                    deleteData(listId);
                     Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -271,6 +273,48 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
         sendPostReqAsyncTask.execute(name, calorie, store);
+    }
+    public void deleteData(final String id){
+
+        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+
+                String IDHolder = id;
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+                nameValuePairs.add(new BasicNameValuePair("id", IDHolder));
+
+                try {
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost(ServerURL_deletedata);
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    HttpResponse httpResponse = httpClient.execute(httpPost);
+                    HttpEntity httpEntity = httpResponse.getEntity();
+
+
+                } catch (ClientProtocolException e) {
+                    return "ClientProtocolException";
+
+                } catch (IOException e) {
+                    return "IOException";
+                }
+                return "Data Inserted Successfully";
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                super.onPostExecute(result);
+
+                Toast.makeText(MainActivity.this, "Data Submit Successfully", Toast.LENGTH_LONG).show();
+
+            }
+        }
+
+        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+
+        sendPostReqAsyncTask.execute(id);
     }
 
     public void getSqliteData(){
