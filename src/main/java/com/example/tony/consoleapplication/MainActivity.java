@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,15 +59,23 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         listItems = new ArrayList<>();
 
         listView = (ListView) findViewById(R.id.listView);
-        getSqliteData();
-        //getJSON(ServerURL_getdata);
+        if(AppLaunchChecker.hasStartedFromLauncher(this)){
+            Log.d("AppLaunchChecker","2回目以降");
+            getSqliteData();
+        } else {
+            getJSON(ServerURL_getdata);
+            Log.d("AppLaunchChecker","はじめてアプリを起動した");
+        }
+
+        AppLaunchChecker.onActivityCreate(this);
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-        loadMyList();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();  // Always call the superclass method first
+//        loadMyList();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                // Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                 try {
                     loadIntoListView(s);
                 } catch (JSONException e) {
@@ -140,20 +150,26 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
     private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
-        ArrayList<ListItem> listItems = new ArrayList<>();
+       ArrayList<ListItem> listItems = new ArrayList<>();
+
+       dbAdapter.openDB();
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
-                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
-                listItems.add(item);
+//                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+//                listItems.add(item);
+               dbAdapter.saveDB(obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
+        dbAdapter.closeDB();
+        loadMyList();
+//        ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
 
     }
 
@@ -166,17 +182,18 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             // タップしたアイテムの取得
             ListView listView = (ListView)parent;
             ListItem item = (ListItem)listView.getItemAtPosition(position);  // SampleListItemにキャスト
+            // IDを取得する
+            myListItem = listItems.get(position);
+            final String listId = myListItem.getId();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Tap No. " + String.valueOf(position + 1));
+            builder.setTitle("Tap No. " + listId);
             builder.setMessage(item.getmName());
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     // TODO Auto-generated method stub
-                    // IDを取得する
-                    myListItem = listItems.get(position);
-                    String listId = myListItem.getId();
+
                     dbAdapter.openDB();     // DBの読み込み(読み書きの方)
                     dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
                     dbAdapter.closeDB();    // DBを閉じる
@@ -230,9 +247,10 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
 
                 } catch (ClientProtocolException e) {
+                    return "ClientProtocolException";
 
                 } catch (IOException e) {
-
+                    return "IOException";
                 }
                 return "Data Inserted Successfully";
             }
@@ -281,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         //ArrayAdapterに対してListViewのリスト(items)の更新
         listItems.clear();
-        adapter.clear();
+        //adapter.clear();
         dbAdapter.openDB();     // DBの読み込み(読み書きの方)
 
         // DBのデータを取得
@@ -300,6 +318,5 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
-        Toast.makeText(MainActivity.this, "List Renew",Toast.LENGTH_SHORT).show();
     }
 }
