@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     private List<ListItem> listItems;
     protected ListItem myListItem;
     ListAdapter adapter;
+    int LastID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             Log.d("AppLaunchChecker","2回目以降");
             getSqliteData();
         } else {
-            getJSON(ServerURL_getdata);
             Log.d("AppLaunchChecker","はじめてアプリを起動した");
+            getJSON(ServerURL_getdata);
         }
 
         AppLaunchChecker.onActivityCreate(this);
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_settings) {
             AddFragment addFragment= new AddFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("lastID",LastID);
+            addFragment.setArguments(bundle);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
             ft.add(R.id.container, addFragment);    // add    Fragment
@@ -159,7 +163,10 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
 //                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
 //                listItems.add(item);
-               dbAdapter.saveDB(obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+               dbAdapter.saveDB(obj.getString("id"), obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+               if (i < jsonArray.length()) {
+                   LastID = Integer.parseInt(obj.getString("id"));
+               }
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -192,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    // TODO Auto-generated method stub
 
                     dbAdapter.openDB();     // DBの読み込み(読み書きの方)
                     dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
@@ -216,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         InsertData(name, calorie, store);
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
         loadMyList();
+        LastID++;
     }
 
     public void InsertData(final String name, final String calorie, final String store){
@@ -236,13 +243,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
-
                     HttpPost httpPost = new HttpPost(ServerURL_insertdata);
-
                     httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf8"));
-
                     HttpResponse httpResponse = httpClient.execute(httpPost);
-
                     HttpEntity httpEntity = httpResponse.getEntity();
 
 
