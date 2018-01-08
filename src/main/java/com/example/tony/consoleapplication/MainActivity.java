@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         if (id == R.id.add_settings) {
             AddFragment addFragment= new AddFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt("lastID",LastID);
-            addFragment.setArguments(bundle);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();// begin  FragmentTransaction
             ft.add(R.id.container, addFragment);    // add    Fragment
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
 //                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
 //                listItems.add(item);
-               dbAdapter.saveDB(obj.getString("id"), obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+               dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
                if (i < jsonArray.length()) {
                    LastID = Integer.parseInt(obj.getString("id"));
                }
@@ -196,8 +195,34 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             final String listName = myListItem.getmName();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Tap No. " + listId);
-            builder.setMessage(item.getmName());
+            builder.setTitle("No. " + listId+" "+item.getmName());
+            builder.setMessage("カロリー: " + item.getmCalories() + "kcal\n" + "ストア: " + item.getmStore());
+            builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    //Toast.makeText(MainActivity.this, "No." + listId,Toast.LENGTH_SHORT).show();
+                    //テキスト入力を受け付けるビューを作成します。
+                    final EditText editView = new EditText(MainActivity.this);
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setIcon(android.R.drawable.ic_dialog_dialer)
+                            .setTitle("テキスト入力ダイアログ")
+                            //setViewにてビューを設定します。
+                            .setView(editView)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    //入力した文字をトースト出力する
+                                    Toast.makeText(MainActivity.this,
+                                            editView.getText().toString(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                }
+                            })
+                            .show();
+                }
+            });
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {

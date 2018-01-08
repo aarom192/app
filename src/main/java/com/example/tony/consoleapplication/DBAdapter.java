@@ -76,13 +76,13 @@ public class DBAdapter {
      * @param calorie  カロリー
      * @param store  ストア名
      */
-    public void saveDB(String id, String name, String calorie, String store) {
+    public void saveDB( String name, String calorie, String store) {
 
         db.beginTransaction();          // トランザクション開始
 
         try {
             ContentValues values = new ContentValues();     // ContentValuesでデータを設定していく
-            values.put(COL_ID, id);
+           // values.put(COL_ID, id);
             values.put(COL_NAME, name);
             values.put(COL_CALORIE, calorie);
             values.put(COL_STORE, store);
@@ -201,7 +201,7 @@ public class DBAdapter {
 
             //テーブルを作成するSQL文の定義 ※スペースに気を付ける
             String createTbl = "CREATE TABLE " + DB_TABLE + " ("
-                    + COL_ID + " TEXT NOT NULL,"
+                    + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COL_NAME + " TEXT NOT NULL,"
                     + COL_CALORIE + " TEXT NOT NULL,"
                     + COL_STORE + " TEXT NOT NULL"
