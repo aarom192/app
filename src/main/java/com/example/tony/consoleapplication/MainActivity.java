@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
-//                ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+               ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
 //                listItems.add(item);
                dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
                if (i < jsonArray.length()) {
@@ -197,30 +197,12 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("No. " + listId+" "+item.getmName());
             builder.setMessage("カロリー: " + item.getmCalories() + "kcal\n" + "ストア: " + item.getmStore());
-            builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("更新",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    //Toast.makeText(MainActivity.this, "No." + listId,Toast.LENGTH_SHORT).show();
-                    //テキスト入力を受け付けるビューを作成します。
-                    final EditText editView = new EditText(MainActivity.this);
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setIcon(android.R.drawable.ic_dialog_dialer)
-                            .setTitle("テキスト入力ダイアログ")
-                            //setViewにてビューを設定します。
-                            .setView(editView)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    //入力した文字をトースト出力する
-                                    Toast.makeText(MainActivity.this,
-                                            editView.getText().toString(),
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                }
-                            })
-                            .show();
+                    // ダイアログを表示する
+                    TestDialogFragment newFragment = new TestDialogFragment();
+                    newFragment.show(getFragmentManager(), "test");
                 }
             });
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
