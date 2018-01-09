@@ -226,13 +226,27 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
+                    AlertDialog.Builder negativebuilder = new AlertDialog.Builder(MainActivity.this);
+                    negativebuilder.setTitle("本当に削除しますか?");
+                    negativebuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            //Toast.makeText(MainActivity.this, "No." + listId,Toast.LENGTH_SHORT).show();
+                            dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+                            dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
+                            dbAdapter.closeDB();    // DBを閉じる
+                            loadMyList();
+                            deleteData(listName);
+                            Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    negativebuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    });
 
-                    dbAdapter.openDB();     // DBの読み込み(読み書きの方)
-                    dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
-                    dbAdapter.closeDB();    // DBを閉じる
-                    loadMyList();
-                    deleteData(listName);
-                    Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
+
+                    negativebuilder.show();
                 }
             });
             //builder.setMessage(item.getmCalories());
