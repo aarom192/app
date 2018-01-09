@@ -41,7 +41,7 @@ import java.util.List;
 import android.database.Cursor;
 
 
-public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener, TestDialogFragment.TestDialogFragmentListener{
     ListView listView;
     String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
@@ -201,8 +201,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     // ダイアログを表示する
-                    TestDialogFragment newFragment = new TestDialogFragment();
-                    newFragment.show(getFragmentManager(), "test");
+                    TestDialogFragment dialogFragment = new TestDialogFragment();
+                    dialogFragment.show(getFragmentManager(), "test");
+
                 }
             });
             builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
@@ -237,6 +238,19 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     };
 
     @Override
+    public void TestDialogFragmentInteraction(String name , String calorie, String store){
+        //you can leave it empty
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        //InsertData(name, calorie, store);
+        Toast.makeText(this, "Name:" +name+ "  and Calories:" + calorie
+                + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
+        loadMyList();
+    }
+
+    @Override
     public void onFragmentInteraction(String name , String calorie, String store){
         //you can leave it empty
         if (getCurrentFocus() != null) {
@@ -246,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         InsertData(name, calorie, store);
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
         loadMyList();
-        LastID++;
     }
 
     public void InsertData(final String name, final String calorie, final String store){
