@@ -176,6 +176,40 @@ public class DBAdapter {
     }
 
     /**
+     * DBのレコードへ更新
+     * updateDB()
+     *
+     * @param id
+     * @param name  変更品名
+     * @param calorie  カロリー
+     */
+    public void updateDB( String id, String name, String calorie) {
+
+        db.beginTransaction();          // トランザクション開始
+
+        try {
+            ContentValues values = new ContentValues();     // ContentValuesでデータを設定していく
+            // values.put(COL_ID, id);
+            values.put(COL_NAME, name);
+            values.put(COL_CALORIE, calorie);
+            //values.put(COL_STORE, store);
+            //values.put(COL_PRICE, price);
+
+            // insertメソッド データ登録
+            // 第1引数：DBのテーブル名
+            // 第2引数：更新する条件式
+            // 第3引数：ContentValues
+            db.update(DB_TABLE, values, "_id = "+ id , null);      // レコードへ登録
+
+            db.setTransactionSuccessful();      // トランザクションへコミット
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();                // トランザクションの終了
+        }
+    }
+
+    /**
      * データベースの生成やアップグレードを管理するSQLiteOpenHelperを継承したクラス
      * DBHelper
      */

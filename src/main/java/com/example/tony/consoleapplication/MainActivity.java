@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
     String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;
+    String ServerURL_updatedata = "http://192.168.100.95/Android/updatedata.php" ;
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
     protected ListItem myListItem;
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         public void onItemClick(AdapterView<?> parent, View view,final int position, long id) {
             // タップしたアイテムの取得
             ListView listView = (ListView)parent;
-            ListItem item = (ListItem)listView.getItemAtPosition(position);  // SampleListItemにキャスト
+            final ListItem item = (ListItem)listView.getItemAtPosition(position);  // SampleListItemにキャスト
             // IDを取得する
             myListItem = listItems.get(position);
             final String listId = myListItem.getId();
@@ -197,11 +198,19 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("No. " + listId+" "+item.getmName());
             builder.setMessage("カロリー: " + item.getmCalories() + "kcal\n" + "ストア: " + item.getmStore());
+            // データを渡す為のBundleを生成し、渡すデータを内包させる
+
             builder.setPositiveButton("更新",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     // ダイアログを表示する
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", listId);
+                    bundle.putString("name", item.getmName());
+                    bundle.putString("calorie", item.getmCalories());
+                    bundle.putString("store", item.getmStore());
                     TestDialogFragment dialogFragment = new TestDialogFragment();
+                    dialogFragment.setArguments(bundle);
                     dialogFragment.show(getFragmentManager(), "test");
 
                 }
@@ -238,14 +247,17 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     };
 
     @Override
-    public void TestDialogFragmentInteraction(String name , String calorie, String store){
+    public void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store){
         //you can leave it empty
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        //InsertData(name, calorie, store);
-        Toast.makeText(this, "Name:" +name+ "  and Calories:" + calorie
+        dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+        dbAdapter.updateDB(id, name, calorie);     // DBから取得したIDが入っているデータを削除する
+        dbAdapter.closeDB();    // DBを閉じる
+        UpdateData(originName, name, calorie, store);
+        Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
                 + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
         loadMyList();
     }
@@ -350,6 +362,56 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
         sendPostReqAsyncTask.execute(name);
+    }
+
+    public void UpdateData(final String originalname,final String name, final String calorie, final String store){
+
+        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+
+                String OriginalNameHolder = originalname;
+                String NameHolder = name;
+                String CalorieHolder = calorie ;
+                String StoreHolder = store;
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+                nameValuePairs.add(new BasicNameValuePair("originalname", OriginalNameHolder));
+                nameValuePairs.add(new BasicNameValuePair("name", NameHolder));
+                nameValuePairs.add(new BasicNameValuePair("calorie", CalorieHolder));
+                nameValuePairs.add(new BasicNameValuePair("store", StoreHolder));
+
+                try {
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost(ServerURL_updatedata);
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf8"));
+                    HttpResponse httpResponse = httpClient.execute(httpPost);
+                    HttpEntity httpEntity = httpResponse.getEntity();
+
+
+                } catch (ClientProtocolException e) {
+                    return "ClientProtocolException";
+
+                } catch (IOException e) {
+                    return "IOException";
+                }
+                return "Data Inserted Successfully";
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                super.onPostExecute(result);
+
+                Toast.makeText(MainActivity.this, "Data Submit Successfully", Toast.LENGTH_LONG).show();
+
+            }
+        }
+
+        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+
+        sendPostReqAsyncTask.execute(name, calorie, store);
     }
 
     public void getSqliteData(){

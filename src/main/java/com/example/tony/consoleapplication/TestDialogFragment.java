@@ -28,18 +28,23 @@ public class TestDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+        Bundle bundle = getArguments();
+        final String ID = bundle.getString("id");
+        final String name = bundle.getString("name");
+        String calorie = bundle.getString("calorie");
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View content = inflater.inflate(R.layout.dialog_setting, null);
         mName = content.findViewById(R.id.name);
         mCalorie = content.findViewById(R.id.calorie);
+        mName.setText(name);
+        mCalorie.setText(calorie);
         builder.setView(content);
 
         builder.setMessage("更新")
                 .setNegativeButton("更新", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
-                        mListener.TestDialogFragmentInteraction(mName.getText().toString(), mCalorie.getText().toString(), "7-11");
+                        mListener.TestDialogFragmentInteraction(ID, name, mName.getText().toString(), mCalorie.getText().toString(), "7-11");
                         //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -60,6 +65,6 @@ public class TestDialogFragment extends DialogFragment {
 
     public interface TestDialogFragmentListener {
         // TODO: Update argument type and name
-        void TestDialogFragmentInteraction(String name , String calorie, String store);
+        void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store);
     }
 }
