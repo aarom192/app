@@ -183,7 +183,7 @@ public class DBAdapter {
      * @param name  変更品名
      * @param calorie  カロリー
      */
-    public void updateDB( String id, String name, String calorie) {
+    public void updateDB( String id, String name, String calorie, String store) {
 
         db.beginTransaction();          // トランザクション開始
 
@@ -192,7 +192,7 @@ public class DBAdapter {
             // values.put(COL_ID, id);
             values.put(COL_NAME, name);
             values.put(COL_CALORIE, calorie);
-            //values.put(COL_STORE, store);
+            values.put(COL_STORE, store);
             //values.put(COL_PRICE, price);
 
             // insertメソッド データ登録

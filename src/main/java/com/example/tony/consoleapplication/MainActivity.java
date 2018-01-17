@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
     protected ListItem myListItem;
-    ListAdapter adapter;
     int LastID;
     ExpandableListView expandableListView;
 
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
             Log.d("AppLaunchChecker","2回目以降");
-            // getSqliteData();
             expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList()));
         } else {
             Log.d("AppLaunchChecker","はじめてアプリを起動した");
@@ -138,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                         negativebuilder.show();
                     }
                 });
-                //builder.setMessage(item.getmCalories());
                 builder.show();
 
                 return true;
@@ -226,9 +223,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
-
-              // ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
-//                listItems.add(item);
                dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
                if (i < jsonArray.length()) {
                    LastID = Integer.parseInt(obj.getString("id"));
@@ -240,74 +234,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         }
         dbAdapter.closeDB();
         loadMyList();
-//        ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
-//        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
-
     }
-
-    /**
-     * リストビューのタップイベント
-     */
-    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view,final int position, long id) {
-            // タップしたアイテムの取得
-            ListView listView = (ListView)parent;
-            final ListItem item = (ListItem)listView.getItemAtPosition(position);  // SampleListItemにキャスト
-            // IDを取得する
-            myListItem = listItems.get(position);
-            final String listId = myListItem.getId();
-            final String listName = myListItem.getmName();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("No. " + listId+" "+item.getmName());
-            builder.setMessage("カロリー: " + item.getmCalories() + "kcal\n" + "ストア: " + item.getmStore());
-            // データを渡す為のBundleを生成し、渡すデータを内包させる
-
-            builder.setPositiveButton("更新",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    // ダイアログを表示する
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", listId);
-                    bundle.putString("name", item.getmName());
-                    bundle.putString("calorie", item.getmCalories());
-                    bundle.putString("store", item.getmStore());
-                    TestDialogFragment dialogFragment = new TestDialogFragment();
-                    dialogFragment.setArguments(bundle);
-                    dialogFragment.show(getFragmentManager(), "test");
-
-                }
-            });
-            builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    AlertDialog.Builder negativebuilder = new AlertDialog.Builder(MainActivity.this);
-                    negativebuilder.setTitle("本当に削除しますか?");
-                    negativebuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            //Toast.makeText(MainActivity.this, "No." + listId,Toast.LENGTH_SHORT).show();
-                            dbAdapter.openDB();     // DBの読み込み(読み書きの方)
-                            dbAdapter.selectDelete(listId);     // DBから取得したIDが入っているデータを削除する
-                            dbAdapter.closeDB();    // DBを閉じる
-                            loadMyList();
-                            deleteData(listName);
-                            Toast.makeText(MainActivity.this, "No." + listId + "  is deleted",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    negativebuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }
-                    });
-                    negativebuilder.show();
-                }
-            });
-            //builder.setMessage(item.getmCalories());
-            builder.show();
-        }
-    };
 
     @Override
     public void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store){
@@ -317,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         dbAdapter.openDB();     // DBの読み込み(読み書きの方)
-        dbAdapter.updateDB(id, name, calorie);     // DBから取得したIDが入っているデータを削除する
+        dbAdapter.updateDB(id, name, calorie, store);     // DBから取得したIDが入っているデータを削除する
         dbAdapter.closeDB();    // DBを閉じる
         UpdateData(originName, name, calorie, store);
         Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
@@ -478,26 +405,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         sendPostReqAsyncTask.execute(name, calorie, store);
     }
 
-    public void getSqliteData(){
-
-        // DBの検索データを取得 入力した文字列を参照してDBの品名から検索
-        dbAdapter.readDB();
-        Cursor c = dbAdapter.getDB(null);
-
-        if (c.moveToFirst()) {
-            do {
-                ListItem item = new ListItem(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
-                listItems.add(item);
-            } while (c.moveToNext());
-        } else {
-            Toast.makeText(this, "検索結果 0件", Toast.LENGTH_SHORT).show();
-        }
-        c.close();
-        dbAdapter.closeDB();        // DBを閉じる
-        adapter = new ListAdapter (this, R.layout.list_item, listItems);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
-    }
 
     /**
      * DBを読み込む＆更新する処理

@@ -22,6 +22,7 @@ import android.widget.Toast;
 public class TestDialogFragment extends DialogFragment {
     EditText mName;
     EditText mCalorie;
+    EditText mStore;
 
     private TestDialogFragmentListener mListener;
     @Override
@@ -32,19 +33,22 @@ public class TestDialogFragment extends DialogFragment {
         final String ID = bundle.getString("id");
         final String name = bundle.getString("name");
         String calorie = bundle.getString("calorie");
+        final String store = bundle.getString("store");
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View content = inflater.inflate(R.layout.dialog_setting, null);
         mName = content.findViewById(R.id.name);
         mCalorie = content.findViewById(R.id.calorie);
+        mStore = content.findViewById(R.id.store);
         mName.setText(name);
         mCalorie.setText(calorie);
+        mStore.setText(store);
         builder.setView(content);
 
         builder.setMessage("更新")
                 .setNegativeButton("更新", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
-                        mListener.TestDialogFragmentInteraction(ID, name, mName.getText().toString(), mCalorie.getText().toString(), "7-11");
+                        mListener.TestDialogFragmentInteraction(ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
                         //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
                     }
                 });
