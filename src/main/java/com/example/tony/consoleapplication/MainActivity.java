@@ -87,13 +87,59 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
                // Adapterをもらってくる
                ExpandableListAdapter adapter = parent.getExpandableListAdapter();
                // メンバー表示用データ作成時に作ったブツがもらえます
-                ListItem item = (ListItem)adapter.getChild(groupPosition, childPosition);
+                final ListItem item = (ListItem)adapter.getChild(groupPosition, childPosition);
                 Toast.makeText(getApplicationContext(), "name clicked:" + item.getmName().toString(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "calories:" + item.getmCalories().toString(), Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("No. " + item.getId()+" "+item.getmName());
+                builder.setMessage("カロリー: " + item.getmCalories() + "kcal\n" + "ストア: " + item.getmStore());
+                // データを渡す為のBundleを生成し、渡すデータを内包させる
+
+                builder.setPositiveButton("更新",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        // ダイアログを表示する
+                        Bundle bundle = new Bundle();
+                        bundle.putString("id", item.getId().toString());
+                        bundle.putString("name", item.getmName().toString());
+                        bundle.putString("calorie", item.getmCalories().toString());
+                        bundle.putString("store", item.getmStore().toString());
+                        TestDialogFragment dialogFragment = new TestDialogFragment();
+                        dialogFragment.setArguments(bundle);
+                        dialogFragment.show(getFragmentManager(), "test");
+
+                    }
+                });
+                builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        AlertDialog.Builder negativebuilder = new AlertDialog.Builder(MainActivity.this);
+                        negativebuilder.setTitle("本当に削除しますか?");
+                        negativebuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                //Toast.makeText(MainActivity.this, "No." + listId,Toast.LENGTH_SHORT).show();
+                                dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+                                dbAdapter.selectDelete(item.getId());     // DBから取得したIDが入っているデータを削除する
+                                dbAdapter.closeDB();    // DBを閉じる
+                                loadMyList();
+                                deleteData(item.getmName().toString());
+
+                            }
+                        });
+                        negativebuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+                        negativebuilder.show();
+                    }
+                });
+                //builder.setMessage(item.getmCalories());
+                builder.show();
 
                 return true;
             }
@@ -348,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
                 nameValuePairs.add(new BasicNameValuePair("name", NameHolder));
+                Log.d("deleteData",NameHolder);
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
