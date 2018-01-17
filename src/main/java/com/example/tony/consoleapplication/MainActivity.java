@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +40,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import android.database.Cursor;
 
 
@@ -47,11 +51,16 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
     String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;
     String ServerURL_updatedata = "http://192.168.100.95/Android/updatedata.php" ;
+    public final static int COL_ID = 0;                 // id
+    public final static int COL_NAME = 1;             // 品名
+    public final static int COL_CALORIE = 2;          // カロリー
+    public final static int COL_STORE = 3;             // ストア
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
     protected ListItem myListItem;
     ListAdapter adapter;
     int LastID;
+    ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,25 +70,35 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         setSupportActionBar(toolbar);
         dbAdapter = new DBAdapter(this);
         listItems = new ArrayList<>();
+        expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
+        int[] rowId = {0,1,2};
 
-        listView = (ListView) findViewById(R.id.listView);
+        //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
             Log.d("AppLaunchChecker","2回目以降");
-            getSqliteData();
+            // getSqliteData();
+            expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList()));
         } else {
             Log.d("AppLaunchChecker","はじめてアプリを起動した");
             getJSON(ServerURL_getdata);
         }
-
         AppLaunchChecker.onActivityCreate(this);
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+               // Adapterをもらってくる
+               ExpandableListAdapter adapter = parent.getExpandableListAdapter();
+               // メンバー表示用データ作成時に作ったブツがもらえます
+                ListItem item = (ListItem)adapter.getChild(groupPosition, childPosition);
+                Toast.makeText(getApplicationContext(), "name clicked:" + item.getmName().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "calories:" + item.getmCalories().toString(), Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();  // Always call the superclass method first
-//        loadMyList();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
-               ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+              // ListItem item = new ListItem(obj.getString("id"),obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
 //                listItems.add(item);
                dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
                if (i < jsonArray.length()) {
@@ -236,8 +255,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                         public void onClick(DialogInterface dialog, int whichButton) {
                         }
                     });
-
-
                     negativebuilder.show();
                 }
             });
@@ -440,7 +457,15 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
      * loadMyList()
      */
     public void loadMyList() {
+        int[] rowId = {0,1,2};
+        expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList()));
+    }
 
+    /**
+     *
+     * @return
+     */
+    private List<List<ListItem>> createChildrenItemList() {
         //ArrayAdapterに対してListViewのリスト(items)の更新
         listItems.clear();
         //adapter.clear();
@@ -448,19 +473,44 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         // DBのデータを取得
         Cursor c = dbAdapter.getDB(null);
-
+        List<ListItem> SEVENELEVEN = new ArrayList<>();
+        List<ListItem> FamilyMart = new ArrayList<>();
+        List<ListItem> DaYung = new ArrayList<>();
+        List<ListItem> Others = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
-                // MyListItemのコンストラクタ呼び出し(myListItemのオブジェクト生成)
-                myListItem = new ListItem(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
-                listItems.add(myListItem);          // 取得した要素をitemsに追加
-
+                if (c.getString(COL_STORE).equals("7-11")) {
+                    SEVENELEVEN.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else if (c.getString(COL_STORE).equals("大苑子")) {
+                    DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else if (c.getString(COL_STORE).equals("全家")) {
+                    FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else {
+                    Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                }
             } while (c.moveToNext());
         }
         c.close();
-        dbAdapter.closeDB();                    // DBを閉じる
-        ListAdapter adapter = new ListAdapter (this, R.layout.list_item, listItems);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(onItemClickListener);  // タップ時のイベントを追加
+        dbAdapter.closeDB();
+        List<List<ListItem>> result = new ArrayList<List<ListItem>>();
+        result.add(SEVENELEVEN);
+        result.add(FamilyMart);
+        result.add(DaYung);
+        result.add(Others);
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private List<String> createGroupItemList() {
+        List<String> groups = new ArrayList<String>();
+        groups.add("7-11");
+        groups.add("全家");
+        groups.add("大苑子");
+        groups.add("其它");
+        return groups;
     }
 }
+
