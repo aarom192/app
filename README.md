@@ -6,3 +6,11 @@ http://onlineconsultant.jp/pukiwiki/?Android%20Fragment%E3%81%AE%E4%B8%AD%E3%81%
 【androidとPHP】Volleyを使ったHTTP通信:
 
 https://qiita.com/S-nobol/items/7929e2793c039770d73a
+
+MagicList:
+
+https://github.com/kojadin/MagicList
+
+Colors:
+
+https://material.io/color/#!/?view.left=0&view.right=0&primary.color=558B2F
