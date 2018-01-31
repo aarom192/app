@@ -1,6 +1,7 @@
 package com.example.tony.consoleapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -117,6 +118,8 @@ public class CostmizeExpandableListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
         TextView textView = getGroupGenericView();
         textView.setText(getGroup(arg0).toString());
+        textView.setTextColor(Color.parseColor("#fafafa"));
+        textView.setTextSize(18);
         return textView;
     }
 

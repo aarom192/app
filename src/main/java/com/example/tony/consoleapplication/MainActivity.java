@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     public final static int COL_STORE = 3;             // ストア
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
-    protected ListItem myListItem;
     int LastID;
     ExpandableListView expandableListView;
 
@@ -89,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                ExpandableListAdapter adapter = parent.getExpandableListAdapter();
                // メンバー表示用データ作成時に作ったブツがもらえます
                 final ListItem item = (ListItem)adapter.getChild(groupPosition, childPosition);
-                Toast.makeText(getApplicationContext(), "name clicked:" + item.getmName().toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "calories:" + item.getmCalories().toString(), Toast.LENGTH_SHORT).show();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("No. " + item.getId()+" "+item.getmName());
@@ -326,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpPost httpPost = new HttpPost(ServerURL_deletedata);
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf8"));
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf8"));
                     HttpResponse httpResponse = httpClient.execute(httpPost);
                     HttpEntity httpEntity = httpResponse.getEntity();
 
@@ -430,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> SEVENELEVEN = new ArrayList<>();
         List<ListItem> FamilyMart = new ArrayList<>();
         List<ListItem> DaYung = new ArrayList<>();
+        List<ListItem> STARBUCKS = new ArrayList<>();
         List<ListItem> Others = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
@@ -439,7 +437,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 } else if (c.getString(COL_STORE).equals("全家")) {
                     FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else {
+                } else if (c.getString(COL_STORE).equals("STARBUCKS")) {
+                    STARBUCKS.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                }else {
                     Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 }
             } while (c.moveToNext());
@@ -450,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         result.add(SEVENELEVEN);
         result.add(FamilyMart);
         result.add(DaYung);
+        result.add(STARBUCKS);
         result.add(Others);
         return result;
     }
@@ -463,6 +464,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         groups.add("7-11");
         groups.add("全家");
         groups.add("大苑子");
+        groups.add("星巴克");
         groups.add("其它");
         return groups;
     }

@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="340dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="20dp">
+        android:paddingLeft="20dp">
 
 
         <TextView
@@ -29,9 +29,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="340dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="20dp">
 
 
         <TextView
@@ -52,9 +53,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="340dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="20dp">
 
 
         <TextView
