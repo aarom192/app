@@ -2,6 +2,8 @@ package com.example.tony.consoleapplication;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.AppLaunchChecker;
@@ -78,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         } else {
             Log.d("AppLaunchChecker","はじめてアプリを起動した");
             getJSON(ServerURL_getdata);
+        }
+
+        if (isNetworkAvailable() == true) {
+            Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
         }
         AppLaunchChecker.onActivityCreate(this);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -467,6 +475,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         groups.add("星巴克");
         groups.add("其它");
         return groups;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
 
