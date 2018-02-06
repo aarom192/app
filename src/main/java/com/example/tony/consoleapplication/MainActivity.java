@@ -49,17 +49,16 @@ import android.database.Cursor;
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener, TestDialogFragment.TestDialogFragmentListener{
     ListView listView;
-    String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;
-    String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;
-    String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;
-    String ServerURL_updatedata = "http://192.168.100.95/Android/updatedata.php" ;
+    String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;    // jasonファイルからデータを取得
+    String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;      // データを挿入
+    String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;      // データの削除
+    String ServerURL_updatedata = "http://192.168.100.95/Android/updatedata.php" ;      // データの更新
     public final static int COL_ID = 0;                 // id
     public final static int COL_NAME = 1;             // 品名
     public final static int COL_CALORIE = 2;          // カロリー
     public final static int COL_STORE = 3;             // ストア
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
-    int LastID;
     ExpandableListView expandableListView;
 
     @Override
@@ -222,17 +221,12 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
     private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
-       ArrayList<ListItem> listItems = new ArrayList<>();
 
        dbAdapter.openDB();
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
                dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
-               if (i < jsonArray.length()) {
-                   LastID = Integer.parseInt(obj.getString("id"));
-               }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -264,6 +258,11 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+        // DBへの登録処理
+        DBAdapter dbAdapter = new DBAdapter(this);
+        dbAdapter.openDB();
+        dbAdapter.saveDB(name, calorie, store);
+        dbAdapter.closeDB();
         InsertData(name, calorie, store);
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
         loadMyList();
