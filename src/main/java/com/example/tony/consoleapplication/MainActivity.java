@@ -81,11 +81,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             getJSON(ServerURL_getdata);
         }
 
-        if (isNetworkAvailable() == true) {
-            Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
-        }
         AppLaunchChecker.onActivityCreate(this);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
@@ -145,6 +140,32 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        if (isNetworkAvailable() == true) {
+           // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
+            dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+
+            // DBのデータを取得
+            Cursor c = dbAdapter.getDB_no_NET(null);
+            if (c.getCount() > 0) {
+                if (c.moveToFirst()) {
+                    do {
+                        InsertData(c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE));
+                    } while (c.moveToNext());
+                }
+                dbAdapter.allDelete();
+            }
+            c.close();
+            dbAdapter.closeDB();
+
+        } else {
+          //  Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -226,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
-               dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"));
+               dbAdapter.saveDB( obj.getString("name"),obj.getString("calorie"), obj.getString("store"), true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -261,8 +282,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         // DBへの登録処理
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.openDB();
-        dbAdapter.saveDB(name, calorie, store);
+        dbAdapter.saveDB(name, calorie, store, isNetworkAvailable());
         dbAdapter.closeDB();
+        // jasonへの登録処理
         InsertData(name, calorie, store);
         Toast.makeText(getApplicationContext(), name+" "+calorie+"kcal", Toast.LENGTH_SHORT).show();
         loadMyList();

@@ -16,6 +16,7 @@ public class DBAdapter {
 
     private final static String DB_NAME = "db_test.db";      // DB名
     private final static String DB_TABLE = "test_chinese";       // DBのテーブル名
+    private final static String DB_NO_INTERNET = "no_net";       // DBのテーブル名
     private final static int DB_VERSION = 1;                // DBのバージョン
 
     /**
@@ -76,7 +77,7 @@ public class DBAdapter {
      * @param calorie  カロリー
      * @param store  ストア名
      */
-    public void saveDB( String name, String calorie, String store) {
+    public void saveDB( String name, String calorie, String store, boolean net) {
 
         db.beginTransaction();          // トランザクション開始
 
@@ -93,6 +94,9 @@ public class DBAdapter {
             // 第2引数：更新する条件式
             // 第3引数：ContentValues
             db.insert(DB_TABLE, null, values);      // レコードへ登録
+            if (!net) {
+                db.insert(DB_NO_INTERNET, null, values);      // レコードへ登録
+            }
 
             db.setTransactionSuccessful();      // トランザクションへコミット
         } catch (Exception e) {
@@ -123,6 +127,26 @@ public class DBAdapter {
     }
 
     /**
+     * DBのデータを取得
+     * getDB()
+     *
+     * @param columns String[] 取得するカラム名 nullの場合は全カラムを取得
+     * @return DBのデータ
+     */
+    public Cursor getDB_no_NET(String[] columns) {
+
+        // queryメソッド DBのデータを取得
+        // 第1引数：DBのテーブル名
+        // 第2引数：取得するカラム名
+        // 第3引数：選択条件(WHERE句)
+        // 第4引数：第3引数のWHERE句において?を使用した場合に使用
+        // 第5引数：集計条件(GROUP BY句)
+        // 第6引数：選択条件(HAVING句)
+        // 第7引数：ソート条件(ODERBY句)
+        return db.query(DB_NO_INTERNET, columns, null, null, null, null, null);
+    }
+
+    /**
      * DBの検索したデータを取得
      * searchDB()
      *
@@ -147,7 +171,7 @@ public class DBAdapter {
             // 第1引数：テーブル名
             // 第2引数：削除する条件式 nullの場合は全レコードを削除
             // 第3引数：第2引数で?を使用した場合に使用
-            db.delete(DB_TABLE, null, null);        // DBのレコードを全削除
+            db.delete(DB_NO_INTERNET, null, null);        // DBのレコードを全削除
             db.setTransactionSuccessful();          // トランザクションへコミット
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +265,15 @@ public class DBAdapter {
                     + COL_STORE + " TEXT NOT NULL"
                     + ");";
 
+            String none_net_DB = "CREATE TABLE " + DB_NO_INTERNET + " ("
+                    + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + COL_NAME + " TEXT NOT NULL,"
+                    + COL_CALORIE + " TEXT NOT NULL,"
+                    + COL_STORE + " TEXT NOT NULL"
+                    + ");";
+
             db.execSQL(createTbl);      //SQL文の実行
+            db.execSQL(none_net_DB);      //SQL文の実行
         }
 
         /**
