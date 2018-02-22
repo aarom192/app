@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                                 dbAdapter.closeDB();    // DBを閉じる
                                 loadMyList();
                                 deleteData(item.getmName().toString());
-
                             }
                         });
                         negativebuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
@@ -146,9 +145,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         if (isNetworkAvailable() == true) {
+            // wifi接続している場合
            // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
             dbAdapter.openDB();     // DBの読み込み(読み書きの方)
-
             // DBのデータを取得
             Cursor c = dbAdapter.getDB_no_NET(null);
             if (c.getCount() > 0) {
@@ -161,8 +160,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             }
             c.close();
             dbAdapter.closeDB();
-
         } else {
+            // wifi接続してない場合
           //  Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
         }
 
@@ -457,6 +456,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> FamilyMart = new ArrayList<>();
         List<ListItem> DaYung = new ArrayList<>();
         List<ListItem> STARBUCKS = new ArrayList<>();
+        List<ListItem> Mercuries = new ArrayList<>();
+        List<ListItem> sukiya = new ArrayList<>();
+        List<ListItem> mcdonald = new ArrayList<>();
         List<ListItem> Others = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
@@ -468,7 +470,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 } else if (c.getString(COL_STORE).equals("STARBUCKS")) {
                     STARBUCKS.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                }else {
+                } else if (c.getString(COL_STORE).equals("三商巧福")) {
+                    Mercuries.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else if (c.getString(COL_STORE).equals("SUKIYA")) {
+                    sukiya.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else if (c.getString(COL_STORE).equals("麥當勞")) {
+                    mcdonald.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                } else {
                     Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 }
             } while (c.moveToNext());
@@ -480,6 +488,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         result.add(FamilyMart);
         result.add(DaYung);
         result.add(STARBUCKS);
+        result.add(Mercuries);
+        result.add(sukiya);
+        result.add(mcdonald);
         result.add(Others);
         return result;
     }
@@ -494,6 +505,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         groups.add("全家");
         groups.add("大苑子");
         groups.add("星巴克");
+        groups.add("三商巧福");
+        groups.add("SUKIYA");
+        groups.add("麥當勞");
         groups.add("其它");
         return groups;
     }
