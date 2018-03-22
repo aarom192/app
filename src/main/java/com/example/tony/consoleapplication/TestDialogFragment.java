@@ -68,7 +68,6 @@ public class TestDialogFragment extends DialogFragment {
     }
 
     public interface TestDialogFragmentListener {
-        // TODO: Update argument type and name
         void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store);
     }
 }
