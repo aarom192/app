@@ -145,6 +145,23 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     @Override
     public void onResume() {
         super.onResume();  // Always call the superclass method first
+        HttpURLConnection connection = null;
+        
+//        try {
+//            URL url = new URL(ServerURL_insertdata);
+//            connection = (HttpURLConnection) url.openConnection();
+//
+//            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//                Log.d("onResume:", "ConnectingIsOK");
+//            } else {
+//                Log.d("onResume:", "ConnectingIsFailed");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+
         if (isNetworkAvailable() == true) {
             // wifi接続している場合
            // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
