@@ -118,7 +118,7 @@ public class CostmizeExpandableListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
         TextView textView = getGroupGenericView();
         textView.setText(getGroup(arg0).toString());
-        textView.setTextColor(Color.parseColor("#fafafa"));
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setTextSize(18);
         return textView;
     }
