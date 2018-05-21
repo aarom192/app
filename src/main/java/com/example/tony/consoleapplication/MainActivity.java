@@ -339,10 +339,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     }
 
                 } catch (ClientProtocolException e) {
-                    Log.d("result1:", "NULL");
                     return "ClientProtocolException";
                 } catch (IOException e) {
-                    Log.d("result2:", "NULL");
                     // DBへの登録処理
                     DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                     dbAdapter.openDB();
