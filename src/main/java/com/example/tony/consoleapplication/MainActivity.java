@@ -83,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         }
 
         AppLaunchChecker.onActivityCreate(this);
+        expandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("long clicked","pos: " + position);
+                return true;
+            }
+        });
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
