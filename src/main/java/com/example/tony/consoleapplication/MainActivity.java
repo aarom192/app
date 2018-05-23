@@ -86,7 +86,23 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         expandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("long clicked","pos: " + position);
+                long packedPosition = expandableListView.getExpandableListPosition(position);
+                int itemType = ExpandableListView.getPackedPositionType(packedPosition);
+                int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+                int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+
+                /*  if group item clicked */
+                if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                    //  ...
+                    Log.v("long Group clicked","pos: " + groupPosition);
+                }
+
+                /*  if child item clicked */
+                else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                    //  ...
+                    Log.v("long Child clicked","pos: " + childPosition);
+                }
+
                 return true;
             }
         });
