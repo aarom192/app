@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     DBAdapter dbAdapter;
     private List<ListItem> listItems;
     ExpandableListView expandableListView;
+    private CostmizeExpandableListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
             Log.d("AppLaunchChecker","2回目以降");
-            expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList()));
+            mAdapter = new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList());
+            expandableListView.setAdapter(mAdapter);
         } else {
             Log.d("AppLaunchChecker","はじめてアプリを起動した");
             getJSON(ServerURL_getdata);
@@ -93,8 +95,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
                 /*  if group item clicked */
                 if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-                    //  ...
-                    Log.v("long Group clicked","pos: " + groupPosition);
+                    childPosition = ExpandableListView.getPackedPositionChild(id);
+                    groupPosition = ExpandableListView.getPackedPositionGroup(id);
+                    // メンバー表示用データ作成時に作ったブツがもらえます
+                    Log.v("on long clicked","group pos: " + groupPosition +"child pos: " + childPosition );
+                    final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
+
+                    Log.v("long Group clicked","pos: " + item.getmStore());
                 }
 
                 /*  if child item clicked */
@@ -113,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                // Adapterをもらってくる
                ExpandableListAdapter adapter = parent.getExpandableListAdapter();
                // メンバー表示用データ作成時に作ったブツがもらえます
-                final ListItem item = (ListItem)adapter.getChild(groupPosition, childPosition);
+                Log.v("on Child clicked","group pos: " + groupPosition +"child pos: " + childPosition );
+                final ListItem item = (ListItem)mAdapter.getChild(groupPosition, childPosition);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("No. " + item.getId()+" "+item.getmName());
