@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     private List<ListItem> listItems;
     ExpandableListView expandableListView;
     private CostmizeExpandableListAdapter mAdapter;
+    public ArrayList StoreArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,18 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         setSupportActionBar(toolbar);
         dbAdapter = new DBAdapter(this);
         listItems = new ArrayList<>();
+        StoreArray = new ArrayList();
         expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
         int[] rowId = {0,1,2};
+
+        StoreArray.add("7-11");
+        StoreArray.add("全家");
+        StoreArray.add("大苑子");
+        StoreArray.add("星巴克");
+        StoreArray.add("三商巧福");
+        StoreArray.add("SUKIYA");
+        StoreArray.add("麥當勞");
+        StoreArray.add("其它");
 
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
@@ -98,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     childPosition = ExpandableListView.getPackedPositionChild(id);
                     groupPosition = ExpandableListView.getPackedPositionGroup(id);
                     // メンバー表示用データ作成時に作ったブツがもらえます
-                    Log.v("on long clicked","group pos: " + groupPosition +"child pos: " + childPosition );
-                    final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
+                    Log.v("on long clicked","group pos: " + groupPosition +" StoreName: " + StoreArray.get(groupPosition));
+                    //final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
 
-                    Log.v("long Group clicked","pos: " + item.getmStore());
+                    //Log.v("long Group clicked","pos: " + item.getmStore());
                 }
 
                 /*  if child item clicked */
