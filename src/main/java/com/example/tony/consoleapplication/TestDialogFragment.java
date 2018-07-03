@@ -29,12 +29,12 @@ public class TestDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         final String from = bundle.getString("from");
+        final String ID = bundle.getString("id");
+        final String name = bundle.getString("name");
+        String calorie = bundle.getString("calorie");
+        final String store = bundle.getString("store");
+        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (from == "child") {
-            final String ID = bundle.getString("id");
-            final String name = bundle.getString("name");
-            String calorie = bundle.getString("calorie");
-            final String store = bundle.getString("store");
-            LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View content = inflater.inflate(R.layout.dialog_setting, null);
             mName = content.findViewById(R.id.name);
             mCalorie = content.findViewById(R.id.calorie);
@@ -48,14 +48,30 @@ public class TestDialogFragment extends DialogFragment {
                     .setNegativeButton("更新", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
-                            mListener.TestDialogFragmentInteraction(ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
+                            mListener.TestDialogFragmentInteraction(from ,ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
                             //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
                         }
                     });
             // Create the AlertDialog object and return it
 
         } else if (from == "parent") {
+            View content = inflater.inflate(R.layout.dialog_setting, null);
+            mName = content.findViewById(R.id.name);
+            mCalorie = content.findViewById(R.id.calorie);
+            mStore = content.findViewById(R.id.store);
+            mName.setText(name);
+            mCalorie.setText(calorie);
+            mStore.setText(store);
+            builder.setView(content);
 
+            builder.setMessage("追加")
+                    .setNegativeButton("追加", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            mListener.TestDialogFragmentInteraction(from, ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
+                            //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
 
         return builder.create();
@@ -72,6 +88,6 @@ public class TestDialogFragment extends DialogFragment {
         }
     }
     public interface TestDialogFragmentListener {
-        void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store);
+        void TestDialogFragmentInteraction(String from,String id, String originName, String name , String calorie, String store);
     }
 }

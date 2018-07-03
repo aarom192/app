@@ -111,6 +111,13 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     // メンバー表示用データ作成時に作ったブツがもらえます
                     Log.v("on long clicked","group pos: " + groupPosition +" StoreName: " + StoreArray.get(groupPosition));
                     //final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
+                    // ダイアログを表示する
+                    Bundle bundle = new Bundle();
+                    bundle.putString("from","parent");
+                    bundle.putString("store", StoreArray.get(groupPosition).toString());
+                    TestDialogFragment dialogFragment = new TestDialogFragment();
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.show(getFragmentManager(), "parent");
 
                     //Log.v("long Group clicked","pos: " + item.getmStore());
                 }
@@ -316,18 +323,26 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     }
 
     @Override
-    public void TestDialogFragmentInteraction(String id, String originName, String name , String calorie, String store){
+    public void TestDialogFragmentInteraction(String from, String id, String originName, String name , String calorie, String store){
         //you can leave it empty
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        dbAdapter.openDB();     // DBの読み込み(読み書きの方)
-        dbAdapter.updateDB(id, name, calorie, store);     // DBから取得したIDが入っているデータを削除する
-        dbAdapter.closeDB();    // DBを閉じる
-        UpdateData(originName, name, calorie, store);
-        Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
-                + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
+        if (from == "child") {
+            dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+            dbAdapter.updateDB(id, name, calorie, store);     // DBから取得したIDが入っているデータを削除する
+            dbAdapter.closeDB();    // DBを閉じる
+            UpdateData(originName, name, calorie, store);
+            Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
+                    + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
+
+        } else if (from == "parent") {
+            dbAdapter.openDB();     // DBの読み込み(読み書きの方)
+            dbAdapter.saveDB( name, calorie, store, true);
+            dbAdapter.closeDB();    // DBを閉じる
+            InsertData( name, calorie, store);
+        }
         loadMyList();
     }
 

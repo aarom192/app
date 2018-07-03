@@ -78,9 +78,7 @@ public class DBAdapter {
      * @param store  ストア名
      */
     public void saveDB( String name, String calorie, String store, boolean net) {
-
         db.beginTransaction();          // トランザクション開始
-
         try {
             ContentValues values = new ContentValues();     // ContentValuesでデータを設定していく
            // values.put(COL_ID, id);
