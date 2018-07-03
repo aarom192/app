@@ -342,6 +342,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             dbAdapter.saveDB( name, calorie, store, true);
             dbAdapter.closeDB();    // DBを閉じる
             InsertData( name, calorie, store);
+            Toast.makeText(this, "Name:" +name+ "  and Calories:" + calorie
+                    + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
         }
         loadMyList();
     }
