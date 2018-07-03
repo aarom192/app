@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     public void onClick(DialogInterface arg0, int arg1) {
                         // ダイアログを表示する
                         Bundle bundle = new Bundle();
+                        bundle.putString("from","child");
                         bundle.putString("id", item.getId().toString());
                         bundle.putString("name", item.getmName().toString());
                         bundle.putString("calorie", item.getmCalories().toString());
@@ -151,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                         TestDialogFragment dialogFragment = new TestDialogFragment();
                         dialogFragment.setArguments(bundle);
                         dialogFragment.show(getFragmentManager(), "test");
-
                     }
                 });
                 builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
