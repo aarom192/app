@@ -76,9 +76,22 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
         int[] rowId = {0,1,2};
         List<ListItem> SEVENELEVEN = new ArrayList<>();
+        List<ListItem> FamilyMart = new ArrayList<>();
+        List<ListItem> DaYung = new ArrayList<>();
+        List<ListItem> STARBUCKS = new ArrayList<>();
+        List<ListItem> Mercuries = new ArrayList<>();
+        List<ListItem> sukiya = new ArrayList<>();
+        List<ListItem> mcdonald = new ArrayList<>();
+        List<ListItem> Others = new ArrayList<>();
 
         StoreArray.add(new ParentStore("7-11", SEVENELEVEN));
-       // StoreArray.add(new ParentStore("全家", "FamilyMart"));
+        StoreArray.add(new ParentStore("全家", FamilyMart));
+        StoreArray.add(new ParentStore("大苑子", DaYung));
+        StoreArray.add(new ParentStore("STARBUCKS", STARBUCKS));
+        StoreArray.add(new ParentStore("三商巧福", Mercuries));
+        StoreArray.add(new ParentStore("SUKIYA", sukiya));
+        StoreArray.add(new ParentStore("麥當勞", mcdonald));
+        StoreArray.add(new ParentStore("其它", Others));
 
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
@@ -392,11 +405,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
             @Override
             protected void onPostExecute(String result) {
-
                 super.onPostExecute(result);
-
                 Toast.makeText(MainActivity.this, "Data Submit Successfully", Toast.LENGTH_LONG).show();
-
             }
         }
 
@@ -553,31 +563,36 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> Others = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
-                if (c.getString(COL_STORE).equals("7-11")) {
-                    StoreArray.get(0).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("大苑子")) {
-                    DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("全家")) {
-                    FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("STARBUCKS")) {
-                    STARBUCKS.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("三商巧福")) {
-                    Mercuries.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("SUKIYA")) {
-                    sukiya.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else if (c.getString(COL_STORE).equals("麥當勞")) {
-                    mcdonald.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-                } else {
-                    Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                for (int i=0; i<StoreArray.size();i++) {
+                    if (c.getString(COL_STORE).equals(StoreArray.get(i).getParentStore())) {
+                        StoreArray.get(i).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                    }
                 }
+//                if (c.getString(COL_STORE).equals("7-11")) {
+//                    StoreArray.get(0).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("大苑子")) {
+//                    DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("全家")) {
+//                    FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("STARBUCKS")) {
+//                    STARBUCKS.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("三商巧福")) {
+//                    Mercuries.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("SUKIYA")) {
+//                    sukiya.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else if (c.getString(COL_STORE).equals("麥當勞")) {
+//                    mcdonald.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                } else {
+//                    Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+//                }
             } while (c.moveToNext());
         }
         c.close();
         dbAdapter.closeDB();
         List<List<ListItem>> result = new ArrayList<List<ListItem>>();
-        result.add(StoreArray.get(0).getEnglishStore());
-//        result.add(FamilyMart);
-//        result.add(DaYung);
+        for (int i=0; i<StoreArray.size();i++) {
+            result.add(StoreArray.get(i).getEnglishStore());
+        }
 //        result.add(STARBUCKS);
 //        result.add(Mercuries);
 //        result.add(sukiya);
@@ -592,7 +607,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
      */
     private List<String> createGroupItemList() {
         List<String> groups = new ArrayList<>();
-        groups.add(StoreArray.get(0).getParentStore());
+        for (int i=0; i<StoreArray.size();i++) {
+            groups.add(StoreArray.get(i).getParentStore());
+        }
         return groups;
     }
 
