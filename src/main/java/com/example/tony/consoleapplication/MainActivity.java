@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     private List<ListItem> listItems;
     ExpandableListView expandableListView;
     private CostmizeExpandableListAdapter mAdapter;
-    public ArrayList StoreArray;
+    public List<ParentStore> StoreArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +75,10 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         StoreArray = new ArrayList();
         expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
         int[] rowId = {0,1,2};
+        List<ListItem> SEVENELEVEN = new ArrayList<>();
 
-        StoreArray.add("7-11");
-        StoreArray.add("全家");
-        StoreArray.add("大苑子");
-        StoreArray.add("星巴克");
-        StoreArray.add("三商巧福");
-        StoreArray.add("SUKIYA");
-        StoreArray.add("麥當勞");
-        StoreArray.add("其它");
+        StoreArray.add(new ParentStore("7-11", SEVENELEVEN));
+       // StoreArray.add(new ParentStore("全家", "FamilyMart"));
 
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
@@ -195,21 +190,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         HttpURLConnection connection = null;
-        
-//        try {
-//            URL url = new URL(ServerURL_insertdata);
-//            connection = (HttpURLConnection) url.openConnection();
-//
-//            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                Log.d("onResume:", "ConnectingIsOK");
-//            } else {
-//                Log.d("onResume:", "ConnectingIsFailed");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
 
         if (isNetworkAvailable() == true) {
             // wifi接続している場合
@@ -562,6 +542,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
         // DBのデータを取得
         Cursor c = dbAdapter.getDB(null);
+
         List<ListItem> SEVENELEVEN = new ArrayList<>();
         List<ListItem> FamilyMart = new ArrayList<>();
         List<ListItem> DaYung = new ArrayList<>();
@@ -573,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         if (c.moveToFirst()) {
             do {
                 if (c.getString(COL_STORE).equals("7-11")) {
-                    SEVENELEVEN.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
+                    StoreArray.get(0).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 } else if (c.getString(COL_STORE).equals("大苑子")) {
                     DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                 } else if (c.getString(COL_STORE).equals("全家")) {
@@ -594,14 +575,14 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         c.close();
         dbAdapter.closeDB();
         List<List<ListItem>> result = new ArrayList<List<ListItem>>();
-        result.add(SEVENELEVEN);
-        result.add(FamilyMart);
-        result.add(DaYung);
-        result.add(STARBUCKS);
-        result.add(Mercuries);
-        result.add(sukiya);
-        result.add(mcdonald);
-        result.add(Others);
+        result.add(StoreArray.get(0).getEnglishStore());
+//        result.add(FamilyMart);
+//        result.add(DaYung);
+//        result.add(STARBUCKS);
+//        result.add(Mercuries);
+//        result.add(sukiya);
+//        result.add(mcdonald);
+//        result.add(Others);
         return result;
     }
 
@@ -610,15 +591,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
      * @return
      */
     private List<String> createGroupItemList() {
-        List<String> groups = new ArrayList<String>();
-        groups.add("7-11");
-        groups.add("全家");
-        groups.add("大苑子");
-        groups.add("星巴克");
-        groups.add("三商巧福");
-        groups.add("SUKIYA");
-        groups.add("麥當勞");
-        groups.add("其它");
+        List<String> groups = new ArrayList<>();
+        groups.add(StoreArray.get(0).getParentStore());
         return groups;
     }
 
