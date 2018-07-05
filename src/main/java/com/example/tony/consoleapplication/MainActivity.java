@@ -562,24 +562,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                         StoreArray.get(i).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                     }
                 }
-
-//                if (c.getString(COL_STORE).equals("7-11")) {
-//                    StoreArray.get(0).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("大苑子")) {
-//                    DaYung.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("全家")) {
-//                    FamilyMart.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("STARBUCKS")) {
-//                    STARBUCKS.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("三商巧福")) {
-//                    Mercuries.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("SUKIYA")) {
-//                    sukiya.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else if (c.getString(COL_STORE).equals("麥當勞")) {
-//                    mcdonald.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                } else {
-//                    Others.add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
-//                }
             } while (c.moveToNext());
         }
         c.close();
@@ -588,11 +570,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         for (int i=0; i<StoreArray.size();i++) {
             result.add(StoreArray.get(i).getEnglishStore());
         }
-//        result.add(STARBUCKS);
-//        result.add(Mercuries);
-//        result.add(sukiya);
-//        result.add(mcdonald);
-//        result.add(Others);
         return result;
     }
 
