@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> Mercuries = new ArrayList<>();
         List<ListItem> sukiya = new ArrayList<>();
         List<ListItem> mcdonald = new ArrayList<>();
+        List<ListItem> tigernoodle = new ArrayList<>();
         List<ListItem> Others = new ArrayList<>();
 
         StoreArray.add(new ParentStore("7-11", SEVENELEVEN));
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         StoreArray.add(new ParentStore("三商巧福", Mercuries));
         StoreArray.add(new ParentStore("SUKIYA", sukiya));
         StoreArray.add(new ParentStore("麥當勞", mcdonald));
+        StoreArray.add(new ParentStore("溫州大餛鈍", tigernoodle));
         StoreArray.add(new ParentStore("其它", Others));
 
         //listView = (ListView) findViewById(R.id.listView);
@@ -553,14 +555,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         // DBのデータを取得
         Cursor c = dbAdapter.getDB(null);
 
-        List<ListItem> SEVENELEVEN = new ArrayList<>();
-        List<ListItem> FamilyMart = new ArrayList<>();
-        List<ListItem> DaYung = new ArrayList<>();
-        List<ListItem> STARBUCKS = new ArrayList<>();
-        List<ListItem> Mercuries = new ArrayList<>();
-        List<ListItem> sukiya = new ArrayList<>();
-        List<ListItem> mcdonald = new ArrayList<>();
-        List<ListItem> Others = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
                 for (int i=0; i<StoreArray.size();i++) {
@@ -568,6 +562,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                         StoreArray.get(i).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
                     }
                 }
+
 //                if (c.getString(COL_STORE).equals("7-11")) {
 //                    StoreArray.get(0).getEnglishStore().add(new ListItem(c.getString(COL_ID), c.getString(COL_NAME), c.getString(COL_CALORIE), c.getString(COL_STORE)));
 //                } else if (c.getString(COL_STORE).equals("大苑子")) {
