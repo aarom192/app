@@ -119,12 +119,12 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     childPosition = ExpandableListView.getPackedPositionChild(id);
                     groupPosition = ExpandableListView.getPackedPositionGroup(id);
                     // メンバー表示用データ作成時に作ったブツがもらえます
-                    Log.v("on long clicked","group pos: " + groupPosition +" StoreName: " + StoreArray.get(groupPosition));
+                    Log.v("on long clicked","group pos: " + groupPosition +" StoreName: " + StoreArray.get(groupPosition).getParentStore());
                     //final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
                     // ダイアログを表示する
                     Bundle bundle = new Bundle();
                     bundle.putString("from","parent");
-                    bundle.putString("store", StoreArray.get(groupPosition).toString());
+                    bundle.putString("store", StoreArray.get(groupPosition).getParentStore());
                     TestDialogFragment dialogFragment = new TestDialogFragment();
                     dialogFragment.setArguments(bundle);
                     dialogFragment.show(getFragmentManager(), "parent");
