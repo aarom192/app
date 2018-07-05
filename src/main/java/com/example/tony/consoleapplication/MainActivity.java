@@ -116,11 +116,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
 
                 /*  if group item clicked */
                 if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-                    childPosition = ExpandableListView.getPackedPositionChild(id);
                     groupPosition = ExpandableListView.getPackedPositionGroup(id);
                     // メンバー表示用データ作成時に作ったブツがもらえます
                     Log.v("on long clicked","group pos: " + groupPosition +" StoreName: " + StoreArray.get(groupPosition).getParentStore());
-                    //final ListItem item = (ListItem)mAdapter.getGroup(groupPosition);
                     // ダイアログを表示する
                     Bundle bundle = new Bundle();
                     bundle.putString("from","parent");
@@ -129,12 +127,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     dialogFragment.setArguments(bundle);
                     dialogFragment.show(getFragmentManager(), "parent");
 
-                    //Log.v("long Group clicked","pos: " + item.getmStore());
-                }
-
+            }
                 /*  if child item clicked */
                 else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-                    //  ...
                     Log.v("long Child clicked","pos: " + childPosition);
                 }
 
