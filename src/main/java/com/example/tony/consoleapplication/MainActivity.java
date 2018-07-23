@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -126,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     TestDialogFragment dialogFragment = new TestDialogFragment();
                     dialogFragment.setArguments(bundle);
                     dialogFragment.show(getFragmentManager(), "parent");
-
             }
                 /*  if child item clicked */
                 else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
@@ -335,6 +335,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             Toast.makeText(this, "Name:" +name+ "  and Calories:" + calorie
                     + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
         }
+        //expandableListView.deferNotifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         loadMyList();
     }
 
