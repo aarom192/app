@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         StoreArray = new ArrayList();
         expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
         int[] rowId = {0,1,2};
+        List<ListItem> Breakfast = new ArrayList<>();
         List<ListItem> SEVENELEVEN = new ArrayList<>();
         List<ListItem> FamilyMart = new ArrayList<>();
         List<ListItem> DaYung = new ArrayList<>();
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> tigernoodle = new ArrayList<>();
         List<ListItem> Others = new ArrayList<>();
 
+        StoreArray.add(new ParentStore("早餐", Breakfast));
         StoreArray.add(new ParentStore("7-11", SEVENELEVEN));
         StoreArray.add(new ParentStore("全家", FamilyMart));
         StoreArray.add(new ParentStore("大苑子", DaYung));
