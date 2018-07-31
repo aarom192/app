@@ -92,9 +92,9 @@ public class DBAdapter {
             // 第2引数：更新する条件式
             // 第3引数：ContentValues
             db.insert(DB_TABLE, null, values);      // レコードへ登録
-            if (!net) {
-                db.insert(DB_NO_INTERNET, null, values);      // レコードへ登録
-            }
+//            if (!net) {
+//                db.insert(DB_NO_INTERNET, null, values);      // レコードへ登録
+//            }
 
             db.setTransactionSuccessful();      // トランザクションへコミット
         } catch (Exception e) {

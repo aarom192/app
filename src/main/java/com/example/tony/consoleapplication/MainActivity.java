@@ -548,7 +548,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     private List<List<ListItem>> createChildrenItemList() {
         //ArrayAdapterに対してListViewのリスト(items)の更新
         listItems.clear();
-        //adapter.clear();
         dbAdapter.openDB();     // DBの読み込み(読み書きの方)
 
         // DBのデータを取得
