@@ -33,6 +33,7 @@ public class TestDialogFragment extends DialogFragment {
         final String name = bundle.getString("name");
         String calorie = bundle.getString("calorie");
         final String store = bundle.getString("store");
+        final int groupposition = bundle.getInt("groupPosition");
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (from == "child") {
             View content = inflater.inflate(R.layout.dialog_setting, null);
@@ -48,7 +49,7 @@ public class TestDialogFragment extends DialogFragment {
                     .setNegativeButton("更新", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
-                            mListener.TestDialogFragmentInteraction(from ,ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
+                            mListener.TestDialogFragmentInteraction(from ,ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString(),groupposition);
                             //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -68,7 +69,7 @@ public class TestDialogFragment extends DialogFragment {
                     .setNegativeButton("追加", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
-                            mListener.TestDialogFragmentInteraction(from, ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString());
+                            mListener.TestDialogFragmentInteraction(from, ID, name, mName.getText().toString(), mCalorie.getText().toString(), mStore.getText().toString(), groupposition);
                             //Toast.makeText(getActivity(), "Name:" +mName.getText().toString()+ "  and Calories:" + mCalorie.getText().toString()+ "kcal",Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -88,6 +89,6 @@ public class TestDialogFragment extends DialogFragment {
         }
     }
     public interface TestDialogFragmentListener {
-        void TestDialogFragmentInteraction(String from,String id, String originName, String name , String calorie, String store);
+        void TestDialogFragmentInteraction(String from,String id, String originName, String name , String calorie, String store, int groupposition);
     }
 }

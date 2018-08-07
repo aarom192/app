@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                     Bundle bundle = new Bundle();
                     bundle.putString("from","parent");
                     bundle.putString("store", StoreArray.get(groupPosition).getParentStore());
+                    bundle.putInt("groupPosition",groupPosition);
                     TestDialogFragment dialogFragment = new TestDialogFragment();
                     dialogFragment.setArguments(bundle);
                     dialogFragment.show(getFragmentManager(), "parent");
@@ -315,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     }
 
     @Override
-    public void TestDialogFragmentInteraction(String from, String id, String originName, String name , String calorie, String store){
+    public void TestDialogFragmentInteraction(String from, String id, String originName, String name , String calorie, String store, int groupposition){
         //you can leave it empty
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -329,17 +330,24 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
                     + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
 
-        } else if (from == "parent") {
+        } else if (from == "parent") { // 親からデータの追加
             dbAdapter.openDB();     // DBの読み込み(読み書きの方)
             dbAdapter.saveDB( name, calorie, store, true);
             dbAdapter.closeDB();    // DBを閉じる
             InsertData( name, calorie, store);
+            String insrtID = id;
             Toast.makeText(this, "Name:" +name+ "  and Calories:" + calorie
                     + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
+            StoreArray.get(groupposition).getEnglishStore().add(new ListItem(insrtID, name, calorie, store));
+            List<List<ListItem>> result = new ArrayList<List<ListItem>>();
+            for (int i=0; i<StoreArray.size();i++) {
+                result.add(StoreArray.get(i).getEnglishStore());
+            }
+            int[] rowId = {0,1,2};
+            expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), result));
         }
         //expandableListView.deferNotifyDataSetChanged();
-        mAdapter.notifyDataSetChanged();
-        loadMyList();
+        //loadMyList();
     }
 
     @Override
