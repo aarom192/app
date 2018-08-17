@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                // メンバー表示用データ作成時に作ったブツがもらえます
                 Log.v("on Child clicked","group pos: " + groupPosition +"child pos: " + childPosition );
                 final ListItem item = (ListItem)mAdapter.getChild(groupPosition, childPosition);
+                final long ID = id;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("No. " + item.getId()+" "+item.getmName());
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+                        int groupPosition = ExpandableListView.getPackedPositionGroup(ID);
                         AlertDialog.Builder negativebuilder = new AlertDialog.Builder(MainActivity.this);
                         negativebuilder.setTitle("本当に削除しますか?");
                         negativebuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
