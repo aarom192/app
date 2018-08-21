@@ -146,9 +146,10 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                // Adapterをもらってくる
                ExpandableListAdapter adapter = parent.getExpandableListAdapter();
                // メンバー表示用データ作成時に作ったブツがもらえます
-                Log.v("on Child clicked","group pos: " + groupPosition +"child pos: " + childPosition );
+                //Log.v("on Child clicked","group pos: " + groupPosition +"child pos: " + childPosition );
                 final ListItem item = (ListItem)mAdapter.getChild(groupPosition, childPosition);
-                final long ID = id;
+                final int groupPos = groupPosition;
+                final int childPos = childPosition;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("No. " + item.getId()+" "+item.getmName());
@@ -173,7 +174,9 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                 builder.setNegativeButton("Delete",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        int groupPosition = ExpandableListView.getPackedPositionGroup(ID);
+                        final int groupPosition = groupPos;
+                        final int childPosition = childPos;
+                        Log.v("on_Child_clicked_Delete","group pos: " + groupPosition +"  child pos: " + childPosition );
                         AlertDialog.Builder negativebuilder = new AlertDialog.Builder(MainActivity.this);
                         negativebuilder.setTitle("本当に削除しますか?");
                         negativebuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
@@ -183,7 +186,14 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
                                 dbAdapter.openDB();     // DBの読み込み(読み書きの方)
                                 dbAdapter.selectDelete(item.getId());     // DBから取得したIDが入っているデータを削除する
                                 dbAdapter.closeDB();    // DBを閉じる
-                                loadMyList();
+                                StoreArray.get(groupPosition).getEnglishStore().remove(childPosition);
+                                //loadMyList();
+                                List<List<ListItem>> result = new ArrayList<List<ListItem>>();
+                                for (int i=0; i<StoreArray.size();i++) {
+                                    result.add(StoreArray.get(i).getEnglishStore());
+                                }
+                                int[] rowId = {0,1,2};
+                                expandableListView.setAdapter(new CostmizeExpandableListAdapter(getApplicationContext(), rowId, createGroupItemList(), result));
                                 deleteData(item.getmName().toString());
                             }
                         });
