@@ -51,10 +51,10 @@ import android.database.Cursor;
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener, TestDialogFragment.TestDialogFragmentListener{
     ListView listView;
-    String ServerURL_getdata = "http://192.168.100.95/Android/getdata.php" ;    // jasonファイルからデータを取得
-    String ServerURL_insertdata = "http://192.168.100.95/Android/insertdata.php" ;      // データを挿入
-    String ServerURL_deletedata = "http://192.168.100.95/Android/deletedata.php" ;      // データの削除
-    String ServerURL_updatedata = "http://192.168.100.95/Android/updatedata.php" ;      // データの更新
+    String ServerURL_getdata = "http://220.128.102.15:80/Android/getdata.php" ;    // jasonファイルからデータを取得
+    String ServerURL_insertdata = "http://220.128.102.15:80/Android/insertdata.php" ;      // データを挿入
+    String ServerURL_deletedata = "http://220.128.102.15:80/Android/deletedata.php" ;      // データの削除
+    String ServerURL_updatedata = "http://220.128.102.15:80/Android/updatedata.php" ;      // データの更新
     public final static int COL_ID = 0;                 // id
     public final static int COL_NAME = 1;             // 品名
     public final static int COL_CALORIE = 2;          // カロリー
@@ -358,8 +358,6 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             int[] rowId = {0,1,2};
             expandableListView.setAdapter(new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), result));
         }
-        //expandableListView.deferNotifyDataSetChanged();
-        //loadMyList();
     }
 
     @Override
