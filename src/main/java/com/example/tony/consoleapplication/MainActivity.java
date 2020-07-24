@@ -51,10 +51,17 @@ import android.database.Cursor;
 
 public class MainActivity extends AppCompatActivity implements AddFragment.OnFragmentInteractionListener, TestDialogFragment.TestDialogFragmentListener{
     ListView listView;
-    String ServerURL_getdata = "http://220.128.102.15:80/Android/getdata.php" ;    // jasonファイルからデータを取得
-    String ServerURL_insertdata = "http://220.128.102.15:80/Android/insertdata.php" ;      // データを挿入
-    String ServerURL_deletedata = "http://220.128.102.15:80/Android/deletedata.php" ;      // データの削除
-    String ServerURL_updatedata = "http://220.128.102.15:80/Android/updatedata.php" ;      // データの更新
+    /** INTERNET **/
+//    String ServerURL_getdata = "http://220.128.102.15:80/Android/getdata.php" ;    // jasonファイルからデータを取得
+//    String ServerURL_insertdata = "http://220.128.102.15:80/Android/insertdata.php" ;      // データを挿入
+//    String ServerURL_deletedata = "http://220.128.102.15:80/Android/deletedata.php" ;      // データの削除
+//    String ServerURL_updatedata = "http://220.128.102.15:80/Android/updatedata.php" ;      // データの更新
+    /** INTRANET **/
+    String INTRANET = "http://192.168.0.9/";
+    String ServerURL_getdata = INTRANET + "Android/getdata.php" ;    // jasonファイルからデータを取得
+    String ServerURL_insertdata = INTRANET + "Android/insertdata.php" ;      // データを挿入
+    String ServerURL_deletedata = INTRANET + "Android/deletedata.php" ;      // データの削除
+    String ServerURL_updatedata = INTRANET + "Android/updatedata.php" ;      // データの更新
     public final static int COL_ID = 0;                 // id
     public final static int COL_NAME = 1;             // 品名
     public final static int COL_CALORIE = 2;          // カロリー
@@ -64,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     ExpandableListView expandableListView;
     private CostmizeExpandableListAdapter mAdapter;
     public List<ParentStore> StoreArray;
+    public ArrayList BreakFast;
+    List<ListItem> StoreList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         dbAdapter = new DBAdapter(this);
         listItems = new ArrayList<>();
         StoreArray = new ArrayList();
+        BreakFast = new ArrayList();
+        StoreList = new ArrayList<>();
+
+        //  2019/3/19
+        //BreakFast.add("早餐");
+        //BreakFast.add("7-11");
         expandableListView = (ExpandableListView)findViewById(R.id.sample_list);
         int[] rowId = {0,1,2};
         List<ListItem> Breakfast = new ArrayList<>();
@@ -84,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         List<ListItem> Mercuries = new ArrayList<>();
         List<ListItem> sukiya = new ArrayList<>();
         List<ListItem> mcdonald = new ArrayList<>();
+        List<ListItem> KFC = new ArrayList<>();
         List<ListItem> tigernoodle = new ArrayList<>();
         List<ListItem> Others = new ArrayList<>();
 
@@ -95,8 +111,21 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         StoreArray.add(new ParentStore("三商巧福", Mercuries));
         StoreArray.add(new ParentStore("SUKIYA", sukiya));
         StoreArray.add(new ParentStore("麥當勞", mcdonald));
+        StoreArray.add(new ParentStore("肯德雞", KFC));
         StoreArray.add(new ParentStore("溫州大餛鈍", tigernoodle));
         StoreArray.add(new ParentStore("其它", Others));
+
+//        StoreArray.add(new ParentStore("早餐", StoreList[0]));
+//        StoreArray.add(new ParentStore("7-11", StoreList[1]));
+//        StoreArray.add(new ParentStore("全家", StoreList[2]));
+//        StoreArray.add(new ParentStore("大苑子", StoreList[3]));
+//        StoreArray.add(new ParentStore("STARBUCKS", StoreList[4]));
+//        StoreArray.add(new ParentStore("三商巧福", StoreList[5]));
+//        StoreArray.add(new ParentStore("SUKIYA", StoreList[6]));
+//        StoreArray.add(new ParentStore("麥當勞", StoreList[7]));
+//        StoreArray.add(new ParentStore("肯德雞", StoreList[8]));
+//        StoreArray.add(new ParentStore("溫州大餛鈍", StoreList[9]));
+//        StoreArray.add(new ParentStore("其它", StoreList[10]));
 
         //listView = (ListView) findViewById(R.id.listView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
