@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         StoreArray.add(new ParentStore("三商巧福", Mercuries));
         StoreArray.add(new ParentStore("SUKIYA", sukiya));
         StoreArray.add(new ParentStore("麥當勞", mcdonald));
-        StoreArray.add(new ParentStore("肯德雞", KFC));
+        StoreArray.add(new ParentStore("肯德基", KFC));
         StoreArray.add(new ParentStore("溫州大餛鈍", tigernoodle));
         StoreArray.add(new ParentStore("其它", Others));
 
