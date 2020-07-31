@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
     String ServerURL_insertdata = INTRANET + "Android/insertdata.php" ;      // データを挿入
     String ServerURL_deletedata = INTRANET + "Android/deletedata.php" ;      // データの削除
     String ServerURL_updatedata = INTRANET + "Android/updatedata.php" ;      // データの更新
-    public final static int COL_ID = 0;                 // id
+    public final static int COL_ID = 0;                 // id  // Mac change
     public final static int COL_NAME = 1;             // 品名
     public final static int COL_CALORIE = 2;          // カロリー
     public final static int COL_STORE = 3;             // ストア
