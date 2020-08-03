@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             } else {
                 // wifi接続してない場合
                 Toast.makeText(MainActivity.this, "Internet is NOT available(first time)",Toast.LENGTH_SHORT).show();
+                // TODO: dummy data insert
             }
         }
 
@@ -371,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        if (from == "child") {
+        if (from.equals("child")) {
             dbAdapter.openDB();     // DBの読み込み(読み書きの方)
             dbAdapter.updateDB(id, name, calorie, store);     // DBから取得したIDが入っているデータを削除する
             dbAdapter.closeDB();    // DBを閉じる
@@ -379,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             Toast.makeText(this, "Original Name:" +originName+"Name:" +name+ "  and Calories:" + calorie
                     + "kcal" + " and Store:" + store,Toast.LENGTH_SHORT).show();
 
-        } else if (from == "parent") { // 親からデータの追加
+        } else if (from.equals("parent")) { // 親からデータの追加
             dbAdapter.openDB();     // DBの読み込み(読み書きの方)
             dbAdapter.saveDB( name, calorie, store, true);
             dbAdapter.closeDB();    // DBを閉じる
