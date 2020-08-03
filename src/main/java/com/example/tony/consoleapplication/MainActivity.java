@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         setSupportActionBar(toolbar);
         dbAdapter = new DBAdapter(this);
         listItems = new ArrayList<>();
-        StoreArray = new ArrayList();
-        BreakFast = new ArrayList();
+        StoreArray = new ArrayList<>();
+        BreakFast = new ArrayList<>();
         StoreList = new ArrayList<>();
 
         //  2019/3/19
@@ -133,8 +133,16 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             mAdapter = new CostmizeExpandableListAdapter(this, rowId, createGroupItemList(), createChildrenItemList());
             expandableListView.setAdapter(mAdapter);
         } else {
-            Log.d("AppLaunchChecker","はじめてアプリを起動した");
-            getJSON(ServerURL_getdata);
+
+            if (isNetworkAvailable() == true) {
+                // wifi接続している場合
+                // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
+                Log.d("AppLaunchChecker","はじめてアプリを起動した");
+                getJSON(ServerURL_getdata);
+            } else {
+                // wifi接続してない場合
+                Toast.makeText(MainActivity.this, "Internet is NOT available(first time)",Toast.LENGTH_SHORT).show();
+            }
         }
 
         AppLaunchChecker.onActivityCreate(this);
@@ -263,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             dbAdapter.closeDB();
         } else {
             // wifi接続してない場合
-          //  Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Internet is NOT available",Toast.LENGTH_SHORT).show();
         }
 
     }
