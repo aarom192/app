@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
             expandableListView.setAdapter(mAdapter);
         } else {
 
-            if (isNetworkAvailable() == true) {
+            if (isNetworkAvailable()) {
                 // wifi接続している場合
                 // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
                 Log.d("AppLaunchChecker","はじめてアプリを起動した");
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements AddFragment.OnFra
         super.onResume();  // Always call the superclass method first
         HttpURLConnection connection = null;
 
-        if (isNetworkAvailable() == true) {
+        if (isNetworkAvailable()) {
             // wifi接続している場合
            // Toast.makeText(MainActivity.this, "Internet is available",Toast.LENGTH_SHORT).show();
             dbAdapter.openDB();     // DBの読み込み(読み書きの方)
