@@ -11,12 +11,13 @@ public class ParentStore {
         mParentStore = storename;
         mEnglishStore = englishname;
     }
-    public void setParentStore(String storename) {
+    public void setParentStore(String storename, List<ListItem> englishname) {
         mParentStore = storename;
-    }
-    public void setEnglishStore(List<ListItem> englishname) {
         mEnglishStore = englishname;
     }
+//    public void setEnglishStore(List<ListItem> englishname) {
+//        mEnglishStore = englishname;
+//    }
 
     public String getParentStore() {
         return this.mParentStore;
